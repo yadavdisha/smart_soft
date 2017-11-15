@@ -49,7 +49,7 @@ class Sales extends Controller
     {
         //
     }
-
+    
     /**
      * Display the specified resource.
      *

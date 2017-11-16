@@ -200,10 +200,26 @@
                 format: 'yyyy-mm-dd',
                 autoclose: true
             });
+
+
+            $('#vendor_id').select2($("<option value=\"add_item\"><b>Add Vendor</b></option>"));
+
             //Select2 For Vendor ID
             $('#vendor_id').select2({
                 placeholder: "{{ 'Select Vendor' }}",
-            }).append($("<option value=\"add_item\"><b>Add Vendor</b></option>"))
+                data:[
+                    {id:0,text:"enhancement"},
+                    {id:1,text:"bug"},
+                    {id:2,text:"duplicate"},
+                    {id:3,text:"invalid"},
+                    {id:4,text:"Add Vendor"}
+                ],
+                matcher: function(term, text) {
+                    if (text == "Add Vendor")
+                        return true;
+                    text.toUpperCase().indexOf(term.toUpperCase())>=0
+                }
+            })
             .on("select2:select", function(e) { 
                    // what you would like to happen
                    if($(this).val() == "add_item")
@@ -222,7 +238,7 @@
                     escapeMarkup: function (markup) {
                         return markup;
                     }
-               }
+               },
             }).on("select2:select", function(e) { 
                    // what you would like to happen
                    var selectedOption = ($(e.currentTarget).val());

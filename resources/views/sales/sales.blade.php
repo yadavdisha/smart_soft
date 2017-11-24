@@ -202,48 +202,32 @@
             });
 
 
-            $('#vendor_id').select2($("<option value=\"add_item\"><b>Add Vendor</b></option>"));
+            //$('#vendor_id').select2($("<option value=\"add_item\"><b>Add Vendor</b></option>"));
 
+            
             //Select2 For Vendor ID
             $('#vendor_id').select2({
-                placeholder: "{{ 'Select Vendor' }}",
-                data:[
-                    {id:0,text:"enhancement"},
-                    {id:1,text:"bug"},
-                    {id:2,text:"duplicate"},
-                    {id:3,text:"invalid"},
-                    {id:4,text:"Add Vendor"}
-                ],
-                matcher: function(term, text) {
-                    if (text == "Add Vendor")
-                        return true;
-                    text.toUpperCase().indexOf(term.toUpperCase())>=0
-                }
+                placeholder: "{{ 'Select Vendors' }}",
             })
             .on("select2:select", function(e) { 
                    // what you would like to happen
                    if($(this).val() == "add_item")
                       alert("Here it IS!");
-                });
+            })
+            .on('select2:open', () => {
+                    $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
+            });
 
 
 
             //Select2 For State ID
             $('#supply_state_id').select2({
                 placeholder: "{{ 'Select Supply State' }}",
-                language: {
-                    noResults: function(term){
-                        return "<a href='http://google.com'>Add</a>";
-                    },
-                    escapeMarkup: function (markup) {
-                        return markup;
-                    }
-               },
             }).on("select2:select", function(e) { 
                    // what you would like to happen
                    var selectedOption = ($(e.currentTarget).val());
                    alert(selectedOption);
-                });
+            });
 
             //$(document).on('click', '#add, #select2-results-2, .select2-results,.select2-drop', function(){
             //    alert();

@@ -341,12 +341,14 @@
                                     $('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-' + key).html(subvalue);
+
                             });
                             
                         });
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
+                         $(".item-tax-info").tooltip({"content":"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst});
                     }
                 }
             });
@@ -372,11 +374,11 @@
         document.getElementById('item-tax-'+row).value=item_details['unit_id'];
 
 
-        $(".item-tax-info").tooltip({"content":"CGST:10%<br>SGST:2%<br>IGST:3%<br>UTGST:6%"});        
+               
       }
       }        
      };
-     xml.open("GET","/SmartSoft-master/public/autofill?item="+itemName,true);
+     xml.open("GET","/SmartSoft-rohit/public/autofill?item="+itemName,true);
      xml.send();
     });
     });

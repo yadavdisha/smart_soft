@@ -190,11 +190,11 @@ class Items extends Controller
 
                 //Set ItemData Attributes
                 $itemData['discount'] = round($itemDiscount , 2) ;
-                // $itemData['cgst'] = $itemCgst ;
-                // $itemData['sgst'] = $itemSgst ;
-                // $itemData['igst'] = $itemIgst ;
-                // $itemData['ugst'] = $itemUgst ;
-                // $itemData['cess'] = $itemCess ;
+                $itemData['cgst'] = $itemCgst ;
+                $itemData['sgst'] = $itemSgst ;
+                $itemData['igst'] = $itemIgst ;
+                $itemData['ugst'] = $itemUgst ;
+                $itemData['cess'] = $itemCess ;
                 $itemData['subTotal'] = round($item_sub_total , 2) ;
                 $itemData['taxableValue'] = round($itemTaxableValue , 2) ;
                 $itemData['totalTax'] = round($itemTotalTax , 2) ;

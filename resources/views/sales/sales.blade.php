@@ -35,6 +35,7 @@
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
+                            <th width="5%" colspan="1" rowspan="2" class="text-center">Gst Info</th>
                         </tr>
                         <tr style="background-color: #f9f9f9;">
                             <th colspan="1" rowspan="1">
@@ -55,8 +56,25 @@
 
                             <!-- Item Name -->
                             <td>
-                                <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Item Name' }}" name="item[{{ $item_row }}][name]" type="text" id="item-name-{{ $item_row }}">
-                                <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}">
+                                <!-- <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Item Name' }}" name="item[{{ $item_row }}][name]" type="text" id="item-name-{{ $item_row }}">
+                                <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}"> -->
+                                <input list="item-name-{{ $item_row }}" name="item[{{ $item_row }}][name]" class="form-control item-name-class" id="item-name-0-input">
+                                <datalist  id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}">
+                                 <?php
+                                 foreach($items as $item){
+                                   echo "<option value=".$item.">";
+                                 }
+                                 ?>   
+                                 
+                                </datalist> 
+
+                                 <!-- <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="form-control select2 item-list">
+                                       <?php
+                                 // foreach($items as $item){
+                                 //   echo "<option value=".$item.">".$item."</option>";
+                                 // }
+                                 ?> 
+                                </select> -->
                             </td>
 
                             <!-- HSN Code -->
@@ -107,6 +125,12 @@
                                 <span id="item-total-{{ $item_row }}">0</span>
                             </td>
 
+                         <td id="item-tax-info-0" class="item-tax-info" title="tooltip">
+                             <!-- GST info Hover -->
+                    <i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i>
+
+                         </td>
+
                         </tr>
 
                         <?php $item_row++; ?>
@@ -156,6 +180,8 @@
 
 
 @section('js')
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!-- Select2 -->
     <script src="{{ asset('dist/js/select2.full.min.js') }}"></script>
     <!-- Date Picker -->
@@ -169,6 +195,8 @@
     <link rel="stylesheet" href="{{ asset('dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 @endsection
 
 
@@ -313,15 +341,56 @@
                                     $('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-' + key).html(subvalue);
+
                             });
                             
                         });
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
+                         $(".item-tax-info").tooltip({"content":"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst});
                     }
                 }
             });
         }
+     
+
+
+//This method uses element having class:'item-name-class' and autofills the item information 
+//It is the first input of every row in items html table
+    $(document).ready(function(){     
+    $("tbody").on("blur",".item-name-class",function(){
+    var row = $(this).parent().parent().index();
+    var itemName=$("#item-name-"+row+"-input").val();
+    var xml=new XMLHttpRequest();
+     xml.onreadystatechange=function(){
+      if(this.readyState==4 && this.status==200){
+        var item_details=JSON.parse(this.responseText);
+        //console.log(item_details);
+        if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
+        var hsn=document.getElementById('item-hsn-'+row);
+         hsn.value=item_details['hsn'];
+        document.getElementById('item-type-'+row).value=item_details['type'];
+        document.getElementById('item-tax-'+row).value=item_details['unit_id'];
+
+
+               
+      }
+      }        
+     };
+     xml.open("GET","/SmartSoft-rohit/public/autofill?item="+itemName,true);
+     xml.send();
+    });
+    });
+
+
+     $(document).ready(function(){
+     
+$(".item-tax-info").tooltip({"content":"Please Select All Options First"});
+
+     });
+   
+
+
     </script>
 @endsection

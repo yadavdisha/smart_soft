@@ -8,6 +8,8 @@ use App\Models\Setting\Unit;
 use App\Models\Setting\State;
 use App\Models\Vendor\Vendor;
 use App\Models\Tax\Gst;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 use Illuminate\Http\Request;
 
@@ -26,7 +28,10 @@ class Sales extends Controller
         $vendors = Vendor::all()->pluck ('name' , 'id');
         $gst = Gst::all()->pluck ('description' , 'id');
         $states = State::all()->pluck ('name' , 'id');
-        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states'));
+        $items=DB::table('items')->pluck('name');
+        $items=$items->toArray();
+        //dd($items);
+        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items'));
     }
 
     /**
@@ -93,5 +98,18 @@ class Sales extends Controller
     public function destroy($id)
     {
         //
+    }
+
+//autoFill() returns the item details using item name
+      public function autoFill(Request $req)
+    {
+        $data=$req->item;  //item is the get data from url
+        //var_dump($data);
+        $item_details=DB::table('items')->where('name','=',$data)->get()->toArray();
+        
+        //dd(json_encode($item_details[0]));
+       
+        return json_encode($item_details[0]);
+       
     }
 }

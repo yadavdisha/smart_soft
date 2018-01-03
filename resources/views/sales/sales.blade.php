@@ -365,6 +365,7 @@
 //It is the first input of every row in items html table
     $(document).ready(function(){     
     $("tbody").on("blur",".item-name-class",function(){
+    console.log("lol");
     var row = $(this).parent().parent().index();
     var itemName=$("#item-name-"+row+"-input").val();
     var xml=new XMLHttpRequest();
@@ -383,11 +384,7 @@
       }
       }        
      };
-<<<<<<< HEAD
-     xml.open("GET","autofill?item="+itemName,true);
-=======
-     xml.open("GET","/SmartSoft-git/public/autofill?item="+itemName,true);
->>>>>>> 91d5506dcf4e4cfc229a3c2d51f0d90efb46f09d
+     xml.open("GET","{{  url('/autofill')  }}?item="+itemName,true);
      xml.send();
     });
     });
@@ -415,6 +412,7 @@ $.ajax({
                         
                        document.getElementById('item-type-'+row).value=data['item_type'];
                        document.getElementById('item-tax-'+row).value=data['unit_id'];
+                       itemCalculate();
                     }
                 }
             });

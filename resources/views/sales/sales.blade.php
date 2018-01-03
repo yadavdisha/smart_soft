@@ -378,7 +378,7 @@
       }
       }        
      };
-     xml.open("GET","/SmartSoft-rohit/public/autofill?item="+itemName,true);
+     xml.open("GET","/SmartSoft-git/public/autofill?item="+itemName,true);
      xml.send();
     });
     });

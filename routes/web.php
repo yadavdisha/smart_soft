@@ -22,7 +22,7 @@ Route::resource('sales', 'Sales\Sales');
 Route::resource('items', 'Items\Items');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 
-
+Route::get('/autofill','Sales\Sales@autoFill');
 
 
 Route::get('test', function () {

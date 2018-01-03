@@ -30,14 +30,21 @@
                             <th width="10%"  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Rate' }}</th>
+                            <th width="10%" colspan="1" rowspan="1" class="text-center">{{ 'Rate with GST' }}</th>
                             <th width="13%" rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
-                            <th width="5%" colspan="1" rowspan="2" class="text-center">Gst Info</th>
+                            
                         </tr>
                         <tr style="background-color: #f9f9f9;">
+                           <th colspan="1" rowspan="1">
+                                {{ Form::radio('rateType', '0' , true) }} <span> exclusive</span><br>
+                                {{ Form::radio('rateType', '1') }} <span> inclusive</span>
+                            </th>
+
+
+
                             <th colspan="1" rowspan="1">
                                 {{ Form::radio('discountType', '0' , true) }} <span> "Rs" </span>
                                 {{ Form::radio('discountType', '1') }} <span> "%" </span>
@@ -62,7 +69,8 @@
                                 <datalist  id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}">
                                  <?php
                                  foreach($items as $item){
-                                   echo "<option value=".$item.">";
+                                    
+                                   echo "<option value='".$item."'>";
                                  }
                                  ?>   
                                  
@@ -114,9 +122,10 @@
                             <td>
                                 {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'form-control gst-type', 'placeholder' => 'Select GST']) !!}
                             </td>
-
+   
                             <!-- Total Tax -->
                             <td class="text-right" style="vertical-align: middle;">
+                                 <span id="item-tax-info-0" class="item-tax-info" title="tooltip"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span><br>
                                 <span id="item-total-tax-{{ $item_row }}">0</span>
                             </td>
 
@@ -125,11 +134,7 @@
                                 <span id="item-total-{{ $item_row }}">0</span>
                             </td>
 
-                         <td id="item-tax-info-0" class="item-tax-info" title="tooltip">
-                             <!-- GST info Hover -->
-                    <i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i>
-
-                         </td>
+                       
 
                         </tr>
 
@@ -197,6 +202,10 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+    <style type="text/css">
+        .
+    </style>
+
 @endsection
 
 
@@ -241,6 +250,26 @@
                    // what you would like to happen
                    if($(this).val() == "add_item")
                       alert("Here it IS!");
+
+                  $.ajax({
+                url: '{{ url("vendorInfo") }}',
+                type: 'POST',
+                dataType: 'JSON',
+                data: {'vendor_id':$(this).val()},
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function(data) {
+                     
+                    if (data) {
+                        //$('#supply_state_id').select2("val", data[0]);
+                        $('#supply_state_id').val(data[0]).trigger('change.select2');// for changing the values in select2 tag
+                        //console.log(state);
+
+                       itemCalculate();
+                    }
+                }
+            });
+
+
             })
             .on('select2:open', () => {
                     $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
@@ -254,7 +283,7 @@
             }).on("select2:select", function(e) { 
                    // what you would like to happen
                    var selectedOption = ($(e.currentTarget).val());
-                   console.log(selectedOption);
+                   //console.log(selectedOption);
                    itemCalculate();
             });
 
@@ -309,6 +338,7 @@
             });
 
             $(document).on('change','.gst-type',function(){
+            
               itemCalculate();
             });
 
@@ -328,16 +358,22 @@
             });
         });
 
+       $(document).on('click','input[name="rateType"],input[name="discountType"]',function(){
+        itemCalculate();
+       });
+
 
        function itemCalculate() {
+        var row;
             $.ajax({
                 url: '{{ url("items/itemCalculate") }}',
                 type: 'POST',
                 dataType: 'JSON',
-                data: $('#supply_state_id, input[name=\'discountType\']:checked, #items input[type=\'text\'],#items input[type=\'hidden\'], #items textarea, #items select'),
+                data: $('#supply_state_id, input[name=\'discountType\']:checked, #items input[type=\'text\'],#items input[type=\'hidden\'], #items textarea, #items select,input[name=\'rateType\']:checked'),
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                 success: function(data) {
                     if (data) {
+                         console.log(data);
                         $.each( data.items, function( key, itemData ) {
                             $.each( itemData , function (attr , subvalue) {
                                 if(attr == 'total')
@@ -346,14 +382,15 @@
                                     $('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-' + key).html(subvalue);
-
+                             row=key;
                             });
                             
                         });
+                        
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
-                         $(".item-tax-info").tooltip({"content":"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst});
+                         $("#item-tax-info-"+row).tooltip({"content":"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst});
                     }
                 }
             });
@@ -365,14 +402,14 @@
 //It is the first input of every row in items html table
     $(document).ready(function(){     
     $("tbody").on("blur",".item-name-class",function(){
-    console.log("lol");
+    
     var row = $(this).parent().parent().index();
     var itemName=$("#item-name-"+row+"-input").val();
     var xml=new XMLHttpRequest();
      xml.onreadystatechange=function(){
       if(this.readyState==4 && this.status==200){
         var item_details=JSON.parse(this.responseText);
-        //console.log(item_details);
+        console.log(item_details);
         if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
         var hsn=document.getElementById('item-hsn-'+row);
          hsn.value=item_details['hsn'];
@@ -409,9 +446,10 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
-                        
+                        console.log(data);
                        document.getElementById('item-type-'+row).value=data['item_type'];
                        document.getElementById('item-tax-'+row).value=data['unit_id'];
+                       document.getElementById('item-gst-'+row).value=data['gst_id'];
                        itemCalculate();
                     }
                 }

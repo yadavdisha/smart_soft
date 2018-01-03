@@ -23,6 +23,7 @@ Route::resource('items', 'Items\Items');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');
+Route::post('/vendorInfo','Sales\Sales@vendorInfo');
 
 
 Route::get('test', function () {

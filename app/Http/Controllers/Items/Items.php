@@ -122,6 +122,7 @@ class Items extends Controller
         $input_items = request('item');
         $supply_state_id = request('supply_state_id');
         $discountType = request('discountType');
+        $rateType=request('rateType');
         //$discountType = 1;
 
         $json = new \stdClass;
@@ -162,8 +163,12 @@ class Items extends Controller
 
                 $gstCalculator = new GstCalculator();
                 $taxData = array();
+                if($rateType==1){  //for amount with inclusive gst
+                $taxData = $gstCalculator->getReverseTax($supply_state_id , 27 , $GstID , $CessId , $itemTaxableValue);
+                }
+                else{
                 $taxData = $gstCalculator->getTax($supply_state_id , 27 , $GstID , $CessId , $itemTaxableValue);
-
+                  }
                 //$itemTotalTax = ($itemTaxableValue / 100) * 500 ;
                 //$itemTotalTax = ($itemTaxableValue / 100) * $GstRates['rate'];
 

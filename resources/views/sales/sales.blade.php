@@ -79,7 +79,7 @@
 
                             <!-- HSN Code -->
                             <td>
-                                {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['id'=> 'item-hsn-'. $item_row, 'class' => 'form-control select2', 'placeholder' => 'Select HSN']) !!}
+                                {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['id'=> 'item-hsn-'. $item_row, 'class' => 'form-control select2 hsn-code', 'placeholder' => 'Select HSN']) !!}
                             </td>
 
                             <!-- Item Type -->
@@ -112,7 +112,7 @@
                             
                             <!-- GST ID -->
                             <td>
-                                {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'form-control', 'placeholder' => 'Select GST']) !!}
+                                {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'form-control gst-type', 'placeholder' => 'Select GST']) !!}
                             </td>
 
                             <!-- Total Tax -->
@@ -254,7 +254,8 @@
             }).on("select2:select", function(e) { 
                    // what you would like to happen
                    var selectedOption = ($(e.currentTarget).val());
-                   alert(selectedOption);
+                   console.log(selectedOption);
+                   itemCalculate();
             });
 
             //$(document).on('click', '#add, #select2-results-2, .select2-results,.select2-drop', function(){
@@ -297,7 +298,7 @@
 
                         $('#item-total-' + item_id).html(data.total);
 
-                        itemCalculate()
+                        itemCalculate();
                     }
                 });
             });
@@ -305,6 +306,10 @@
             //When any Item data is changed
             $(document).on('keyup', '#items tbody .form-control', function(){
                 itemCalculate();
+            });
+
+            $(document).on('change','.gst-type',function(){
+              itemCalculate();
             });
 
             $(document).on('change', '#vendor_id', function (e) {
@@ -389,6 +394,28 @@
 $(".item-tax-info").tooltip({"content":"Please Select All Options First"});
 
      });
+
+$(document).on('change','.hsn-code',function(){
+var row = $(this).parent().parent().index();
+//console.log(row);
+
+$.ajax({
+                url: '{{ url("/hsn") }}',
+                type: 'POST',
+                dataType: 'JSON',
+                data: {'hsn_code':$(this).val()},
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function(data) {
+                     
+                    if (data) {
+                        
+                       document.getElementById('item-type-'+row).value=data['item_type'];
+                       document.getElementById('item-tax-'+row).value=data['unit_id'];
+                    }
+                }
+            });
+
+});  
    
 
 

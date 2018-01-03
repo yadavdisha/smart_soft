@@ -412,6 +412,7 @@ $.ajax({
                         
                        document.getElementById('item-type-'+row).value=data['item_type'];
                        document.getElementById('item-tax-'+row).value=data['unit_id'];
+                       itemCalculate();
                     }
                 }
             });

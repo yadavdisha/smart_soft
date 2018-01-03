@@ -138,6 +138,7 @@ class Items extends Controller
 
         $items = array();
 
+
         //Process each Item data
         if ($input_items) {
             foreach ($input_items as $key => $item) {
@@ -218,5 +219,18 @@ class Items extends Controller
         $json->grand_total = round($grand_total , 2);
         //Return Data in JSON Format
         return response()->json($json);
+    }
+
+
+    public function hsn(Request $req){
+    
+         $hsn_code=$req->input('hsn_code');
+         $data=HSN::where('hsn',$hsn_code)->get()->toArray();
+
+         $unit=Unit::where('unit',$data[0]['item_type'])->pluck('id')->toArray();
+          //dd($data[0]);
+         $data[0]['unit_id']=$unit[0];
+        return json_encode($data[0]);
+
     }
 }

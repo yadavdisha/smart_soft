@@ -8,6 +8,7 @@ use App\Models\Setting\Unit;
 use App\Models\Setting\State;
 use App\Models\Vendor\Vendor;
 use App\Models\Tax\Gst;
+use App\Models\Item\Item;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
@@ -105,7 +106,7 @@ class Sales extends Controller
     {
         $data=$req->item;  //item is the get data from url
         //var_dump($data);
-        $item_details=DB::table('items')->where('name','=',$data)->get()->toArray();
+        $item_details=Item::where('name','=',$data)->get()->toArray();
         
         //dd(json_encode($item_details[0]));
        

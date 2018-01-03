@@ -113,4 +113,10 @@ class Sales extends Controller
         return json_encode($item_details[0]);
        
     }
+
+    public function vendorInfo(Request $req){
+        $vendor_id=$req->input('vendor_id');
+        $vendor_state=Vendor::where('id',$vendor_id)->pluck('state_id')->toArray();
+        return json_encode($vendor_state);
+    }
 }

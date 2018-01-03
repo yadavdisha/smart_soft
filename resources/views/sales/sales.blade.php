@@ -364,7 +364,7 @@
 //This method uses element having class:'item-name-class' and autofills the item information 
 //It is the first input of every row in items html table
     $(document).ready(function(){     
-    $("tbody").on("change",".item-name-class",function(){
+    $("tbody").on("blur",".item-name-class",function(){
     console.log("lol");
     var row = $(this).parent().parent().index();
     var itemName=$("#item-name-"+row+"-input").val();

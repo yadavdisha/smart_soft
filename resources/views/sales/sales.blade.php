@@ -66,6 +66,7 @@
                                 <!-- <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Item Name' }}" name="item[{{ $item_row }}][name]" type="text" id="item-name-{{ $item_row }}">
                                 <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}"> -->
                               <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="select2 items-dropdown">
+                                option
                                 <option disabled selected>Select Item</option>
                                  <?php
                                  foreach($items as $item){
@@ -73,7 +74,7 @@
                                    echo "<option value='".$item."'>".$item."</option>";
                                  }
                                  ?>
-  
+                                 
                                 </select>
                                 
 
@@ -463,6 +464,7 @@ $(document).ready(function() {
          console.log(item_details['type']);
         document.getElementById('item-type-'+row).value=item_details['type'];
         document.getElementById('item-tax-'+row).value=item_details['unit_id'];
+         document.getElementById('item-gst-'+row).value=item_details['gst'];
         $('.select2').trigger('change.select2');
         itemCalculate();
 

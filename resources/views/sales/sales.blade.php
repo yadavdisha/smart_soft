@@ -66,8 +66,8 @@
                                 <!-- <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Item Name' }}" name="item[{{ $item_row }}][name]" type="text" id="item-name-{{ $item_row }}">
                                 <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}"> -->
                               <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="select2 items-dropdown">
-                                option
                                 <option disabled selected>Select Item</option>
+                                <option>Add New</option>
                                  <?php
                                  foreach($items as $item){
                                     
@@ -94,8 +94,11 @@
 
                             <!-- Item Type -->
                             <td>
-                                <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Type' }}" name="item[{{ $item_row }}][type]" type="text" id="item-type-{{ $item_row }}">
-                                <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}">
+                                <select class="select2" required="required"  name="item[{{ $item_row }}][type]"  id="item-type-{{ $item_row }}">
+                                    <option disabled selected>Select Type</option>
+                                    <option value="Goods">Goods</option>
+                                    <option value="Services">Services</option>
+                                </select>
                             </td>
 
                             <!-- Quantity -->
@@ -127,7 +130,7 @@
    
                             <!-- Total Tax -->
                             <td class="text-right" style="vertical-align: middle;">
-                                 <span id="item-tax-info-0" class="item-tax-info" title="tooltip" style="float:left"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span>
+                                 <span id="item-tax-info-0" class="item-tax-info" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Please Select All Options First" data-html="true" style="float:left"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span>
                                 <span id="item-total-tax-{{ $item_row }}">0</span>
                             </td>
 
@@ -181,6 +184,45 @@
 
     {!! Form::close() !!}
 
+
+    <!-- Modal -->
+<div id="add-item-Modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Item</h4>
+      </div>
+      <div class="modal-body">
+        <form class="add-item-form">
+            <div class="box-body">
+                {{ Form::textGroup('name', 'Item Name' , 'id-card-o') }}
+
+                {{ Form::textGroup('sku', 'Item SKU' , 'key') }}
+
+                {{ Form::selectGroup('hsn', 'HSN Code' , 'barcode', $hsn, '00000000' , []) }}
+
+                {{ Form::selectGroup('unit_id', 'Unit' , 'balance-scale', $units, '59', []) }}
+
+                {{ Form::itemTypeGroup('type', 'Item Type' ) }}
+
+                {{ Form::textareaGroup('details', 'Item Details') }}
+                <div style="float:right">
+             <input type="submit" name="submit" value="Save" class="btn btn-success"/>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+             
+        </form>
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+
    
 @endsection
 
@@ -195,6 +237,7 @@
     <link rel="stylesheet" href="{{ asset('js/bootstrap-datepicker.min.js') }}">
     <script src="{{ asset('js/bootstrap-fancyfile.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 @endsection
 
 @section('css')
@@ -223,6 +266,8 @@ td{
 @section('scripts')
     <script type="text/javascript">
         var item_row = '{{ $item_row }}';
+
+        var globalRow=0;
 
 
         function addItem() {
@@ -400,7 +445,7 @@ td{
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
-                         $("#item-tax-info-"+row).tooltip({"content":"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst});
+                         $("#item-tax-info-"+row).attr('data-content',"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst).data('bs.popover').setContent();
                     }
                 }
             });
@@ -414,7 +459,8 @@ td{
 
 
      $(document).ready(function(){
-     $(".item-tax-info").tooltip({"content":"Please Select All Options First"});
+        
+     $(".item-tax-info").popover();
 });
 
 $(document).on('change','.hsn-code',function(){
@@ -430,9 +476,8 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
-                        console.log(data);
+                        //console.log(data['item_type']);
                        document.getElementById('item-type-'+row).value=data['item_type'];
-                       document.getElementById('item-tax-'+row).value=data['unit_id'];
                        document.getElementById('item-gst-'+row).value=data['gst_id'];
                        $('.select2').trigger('change.select2');
                        itemCalculate();
@@ -451,8 +496,17 @@ $(document).ready(function() {
     $('.items-dropdown').on('select2:select',function(){
   
    var row = $(this).parent().parent().index();
-    //console.log(row);
+    
     var itemName=$("#item-name-"+row).val();
+    //console.log(itemName);
+    if(itemName==="Add New"){
+        $('#add-item-Modal form').trigger('reset'); //for resetting values
+        $('#add-item-Modal').modal();
+        $('#item-name-'+row).val(null).trigger('change.select2');
+        globalRow=row;
+        return;
+    }
+    
     var xml=new XMLHttpRequest();
      xml.onreadystatechange=function(){
       if(this.readyState==4 && this.status==200){
@@ -465,7 +519,7 @@ $(document).ready(function() {
         document.getElementById('item-type-'+row).value=item_details['type'];
         document.getElementById('item-tax-'+row).value=item_details['unit_id'];
          document.getElementById('item-gst-'+row).value=item_details['gst'];
-        $('.select2').trigger('change.select2');
+        $('.select2').trigger('change.select2'); //for updating select2 selected option
         itemCalculate();
 
 
@@ -478,6 +532,36 @@ $(document).ready(function() {
 
 
     });
+});
+
+
+$(document).on('submit','.add-item-form',function(event){
+console.log("lol");
+event.preventDefault();
+$.ajax({
+                url: '{{ url("/items/ajaxStore") }}',
+                type: 'POST',
+                dataType: 'JSON',
+                data: $('input[name="name"],input[name="sku"],#hsn,#unit_id,input[name="type"]:checked,#details'),
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function(data) {
+                     
+                    if (data) {
+                var hsn=document.getElementById('item-hsn-'+globalRow);
+              hsn.value=data['hsn'];
+         console.log(data);
+        document.getElementById('item-type-'+globalRow).value=data['type'];
+        document.getElementById('item-tax-'+globalRow).value=data['unit_id'];
+         document.getElementById('item-gst-'+globalRow).value=data['gst'];
+         var option = new Option(data.name,data.name, true, true);  // Option(innerHTML,value,selected,actual Selection)
+         $('#item-name-'+globalRow).append(option);
+
+          $('.select2').trigger('change.select2'); //for updating select2 selected option
+          itemCalculate();
+          $('#add-item-Modal').modal('hide');
+                    }
+                }
+            });
 });
 
 

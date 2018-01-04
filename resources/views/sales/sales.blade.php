@@ -30,7 +30,7 @@
                             <th width="10%"  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
-                            <th width="10%" colspan="1" rowspan="1" class="text-center">{{ 'Rate with GST' }}</th>
+                            <th width="10%" colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
                             <th width="13%" rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
@@ -38,14 +38,14 @@
                             
                         </tr>
                         <tr style="background-color: #f9f9f9;">
-                           <th colspan="1" rowspan="1">
-                                {{ Form::radio('rateType', '0' , true) }} <span> exclusive</span><br>
-                                {{ Form::radio('rateType', '1') }} <span> inclusive</span>
+                           <th colspan="1" rowspan="1" width="100%">
+                                {{ Form::radio('rateType', '0' , true) }} <span> Exc. GST</span><br>
+                                {{ Form::radio('rateType', '1') }} <span> Inc. GST</span>
                             </th>
 
 
 
-                            <th colspan="1" rowspan="1">
+                            <th colspan="1" rowspan="1" width="100%">
                                 {{ Form::radio('discountType', '0' , true) }} <span> "Rs" </span>
                                 {{ Form::radio('discountType', '1') }} <span> "%" </span>
                             </th>
@@ -65,16 +65,17 @@
                             <td>
                                 <!-- <input class="form-control typeahead" required="required" placeholder="{{ 'Enter Item Name' }}" name="item[{{ $item_row }}][name]" type="text" id="item-name-{{ $item_row }}">
                                 <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}"> -->
-                                <input list="item-name-{{ $item_row }}" name="item[{{ $item_row }}][name]" class="form-control item-name-class" id="item-name-0-input">
-                                <datalist  id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}">
+                              <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="select2 items-dropdown">
+                                <option disabled selected>Select Item</option>
                                  <?php
                                  foreach($items as $item){
                                     
-                                   echo "<option value='".$item."'>";
+                                   echo "<option value='".$item."'>".$item."</option>";
                                  }
-                                 ?>   
-                                 
-                                </datalist> 
+                                 ?>
+  
+                                </select>
+                                
 
                                  <!-- <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="form-control select2 item-list">
                                        <?php
@@ -87,7 +88,7 @@
 
                             <!-- HSN Code -->
                             <td>
-                                {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['id'=> 'item-hsn-'. $item_row, 'class' => 'form-control select2 hsn-code', 'placeholder' => 'Select HSN']) !!}
+                                {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['id'=> 'item-hsn-'. $item_row, 'class' => 'select2 hsn-code', 'placeholder' => 'Select HSN']) !!}
                             </td>
 
                             <!-- Item Type -->
@@ -104,7 +105,7 @@
 
                             <!-- Unit -->
                             <td>
-                                {!! Form::select('item[' . $item_row . '][unit_id]', $units , 'UNIT', ['id'=> 'item-tax-'. $item_row, 'class' => 'form-control select2', 'placeholder' => 'Select GST']) !!}
+                                {!! Form::select('item[' . $item_row . '][unit_id]', $units , 'UNIT', ['id'=> 'item-tax-'. $item_row, 'class' => 'select2', 'placeholder' => 'Select GST']) !!}
                             </td>
 
                             <!-- Rate -->
@@ -120,12 +121,12 @@
                             
                             <!-- GST ID -->
                             <td>
-                                {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'form-control gst-type', 'placeholder' => 'Select GST']) !!}
+                                {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'select2 gst-type', 'placeholder' => 'Select GST']) !!}
                             </td>
    
                             <!-- Total Tax -->
                             <td class="text-right" style="vertical-align: middle;">
-                                 <span id="item-tax-info-0" class="item-tax-info" title="tooltip"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span><br>
+                                 <span id="item-tax-info-0" class="item-tax-info" title="tooltip" style="float:left"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span>
                                 <span id="item-total-tax-{{ $item_row }}">0</span>
                             </td>
 
@@ -202,9 +203,17 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-    <style type="text/css">
-        .
-    </style>
+<style type="text/css">
+td{
+    height:100%;
+}
+   td input.form-control{
+        border-radius: 10%;
+        height:4.4vh;
+        border-color: grey;
+
+    }
+</style>
 
 @endsection
 
@@ -400,38 +409,12 @@
 
 //This method uses element having class:'item-name-class' and autofills the item information 
 //It is the first input of every row in items html table
-    $(document).ready(function(){     
-    $("tbody").on("blur",".item-name-class",function(){
-    
-    var row = $(this).parent().parent().index();
-    var itemName=$("#item-name-"+row+"-input").val();
-    var xml=new XMLHttpRequest();
-     xml.onreadystatechange=function(){
-      if(this.readyState==4 && this.status==200){
-        var item_details=JSON.parse(this.responseText);
-        console.log(item_details);
-        if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
-        var hsn=document.getElementById('item-hsn-'+row);
-         hsn.value=item_details['hsn'];
-        document.getElementById('item-type-'+row).value=item_details['type'];
-        document.getElementById('item-tax-'+row).value=item_details['unit_id'];
-
-
-               
-      }
-      }        
-     };
-     xml.open("GET","{{  url('/autofill')  }}?item="+itemName,true);
-     xml.send();
-    });
-    });
+  
 
 
      $(document).ready(function(){
-     
-$(".item-tax-info").tooltip({"content":"Please Select All Options First"});
-
-     });
+     $(".item-tax-info").tooltip({"content":"Please Select All Options First"});
+});
 
 $(document).on('change','.hsn-code',function(){
 var row = $(this).parent().parent().index();
@@ -450,6 +433,7 @@ $.ajax({
                        document.getElementById('item-type-'+row).value=data['item_type'];
                        document.getElementById('item-tax-'+row).value=data['unit_id'];
                        document.getElementById('item-gst-'+row).value=data['gst_id'];
+                       $('.select2').trigger('change.select2');
                        itemCalculate();
                     }
                 }
@@ -457,6 +441,42 @@ $.ajax({
 
 });  
    
+
+$(document).ready(function() {
+    $('td .select2').select2();
+});
+
+$(document).ready(function() {
+    $('.items-dropdown').on('select2:select',function(){
+  
+   var row = $(this).parent().parent().index();
+    //console.log(row);
+    var itemName=$("#item-name-"+row).val();
+    var xml=new XMLHttpRequest();
+     xml.onreadystatechange=function(){
+      if(this.readyState==4 && this.status==200){
+        var item_details=JSON.parse(this.responseText);
+        console.log(item_details);
+        if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
+        var hsn=document.getElementById('item-hsn-'+row);
+         hsn.value=item_details['hsn'];
+         console.log(item_details['type']);
+        document.getElementById('item-type-'+row).value=item_details['type'];
+        document.getElementById('item-tax-'+row).value=item_details['unit_id'];
+        $('.select2').trigger('change.select2');
+        itemCalculate();
+
+
+               
+      }
+      }        
+     };
+     xml.open("GET","{{  url('/autofill')  }}?item="+itemName,true);
+     xml.send();
+
+
+    });
+});
 
 
     </script>

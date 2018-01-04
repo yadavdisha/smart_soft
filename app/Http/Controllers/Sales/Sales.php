@@ -107,7 +107,9 @@ class Sales extends Controller
         $data=$req->item;  //item is the get data from url
         //var_dump($data);
         $item_details=Item::where('name','=',$data)->get()->toArray();
-        
+        $gst_type=HSN::where('hsn','=',$item_details[0]['hsn'])->pluck('gst_id')->toArray();
+         $item_details[0]['gst']=$gst_type[0];
+        //dd($item_details[0]);
         //dd(json_encode($item_details[0]));
        
         return json_encode($item_details[0]);

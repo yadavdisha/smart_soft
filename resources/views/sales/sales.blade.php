@@ -29,9 +29,9 @@
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'HSN Code' }}</th>
                             <th width="10%"  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
-                            <th width="10%" colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
-                            <th width="13%" rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
+                            <th width="7%" colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
+                            <th width="15%" colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
+                            <th width="15%" rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
                             <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
                             <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
@@ -175,7 +175,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-        {{ Form::saveButtons('incomes/invoices') }}
+        {{ Form::saveButtons('sales/sales') }}
     </div>
     <!-- /.box-footer -->
 

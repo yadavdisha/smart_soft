@@ -24,6 +24,7 @@
                 <table class="table table-bordered" style="font-size: 13px;" id="items">
                     <thead>
                         <tr style="background-color: #f9f9f9;">
+                        
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'HSN Code' }}</th>
@@ -177,7 +178,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-        {{ Form::saveButtons('incomes/invoices') }}
+        {{ Form::saveButtons('sales/sales') }}
     </div>
     <!-- /.box-footer -->
 

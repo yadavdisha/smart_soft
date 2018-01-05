@@ -252,7 +252,7 @@
 }
 
    td input.form-control{
-        border-radius: 10%;
+        border-radius: 9%;
         height:4.2vh;
         border-color: grey;
 

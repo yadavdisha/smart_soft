@@ -585,6 +585,10 @@ $(document).on('click','.add-new-item',function(){
 
  
         $('#add-item-Modal form').trigger('reset'); //for resetting values
+        $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
+        $('#type_0').css({"background-color":"#E7E7E7","color":"black"}); //for resetting the radio button in modal
+        $('#type_0').removeClass("active");
+        $('#type_1').removeClass("active");
         $('#item-name-'+globalRow).select2('close');
         $('#add-item-Modal').modal();
         

@@ -24,29 +24,29 @@
                 <table class="table table-bordered" style="font-size: 13px;" id="items">
                     <thead>
                         <tr style="background-color: #f9f9f9;">
-                            <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'HSN Code' }}</th>
-                            <th width="10%"  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
-                            <th width="10%" colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
-                            <th width="13%" rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
-                            <th width="10%" colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
-                            <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
-                            <th width="5%" colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'HSN Code' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
+                            <th  colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
+                            <th  rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
                             
                         </tr>
                         <tr style="background-color: #f9f9f9;">
-                           <th colspan="1" rowspan="1" width="100%">
+                           <th colspan="1"  class="text-center">
                                 {{ Form::radio('rateType', '0' , true) }} <span> Exc. GST</span><br>
                                 {{ Form::radio('rateType', '1') }} <span> Inc. GST</span>
                             </th>
 
 
 
-                            <th colspan="1" rowspan="1" width="100%">
-                                {{ Form::radio('discountType', '0' , true) }} <span> "Rs" </span>
+                            <th colspan="1" >
+                                {{ Form::radio('discountType', '0' , true) }} <span> "Rs" </span><br>
                                 {{ Form::radio('discountType', '1') }} <span> "%" </span>
                             </th>
                         </tr>
@@ -67,7 +67,6 @@
                                 <input name="item[{{ $item_row }}][item_id]" type="hidden" id="item-id-{{ $item_row }}"> -->
                               <select id="item-name-{{ $item_row }}"  name="item[{{ $item_row }}][name]"  id="item-name-{{ $item_row }}" class="select2 items-dropdown">
                                 <option disabled selected>Select Item</option>
-                                <option>Add New</option>
                                  <?php
                                  foreach($items as $item){
                                     
@@ -94,7 +93,7 @@
 
                             <!-- Item Type -->
                             <td>
-                                <select class="select2" required="required"  name="item[{{ $item_row }}][type]"  id="item-type-{{ $item_row }}">
+                                <select class="select2 item-type-class" required="required"  name="item[{{ $item_row }}][type]"  id="item-type-{{ $item_row }}">
                                     <option disabled selected>Select Type</option>
                                     <option value="Goods">Goods</option>
                                     <option value="Services">Services</option>
@@ -248,15 +247,23 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style type="text/css">
-td{
-    height:100%;
+.input-group .select2-container{
+  width:100% !important;  
 }
+
    td input.form-control{
         border-radius: 10%;
-        height:4.4vh;
+        height:4.2vh;
         border-color: grey;
 
     }
+
+    th{
+        font-size: 1.8vh;
+    }
+    th[rowspan]{
+    vertical-align: top !important;
+}
 </style>
 
 @endsection
@@ -327,7 +334,7 @@ td{
 
             })
             .on('select2:open', () => {
-                    $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
+                    $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 1%;display:inline;">Add New</a>');
             });
 
 
@@ -445,7 +452,7 @@ td{
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
-                         $("#item-tax-info-"+row).attr('data-content',"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst).data('bs.popover').setContent();
+                         $("#item-tax-info-"+row).attr('data-content',"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst).data('bs.popover').setContent();//used for reinitializing the popover element after changing content
                     }
                 }
             });
@@ -499,14 +506,8 @@ $(document).ready(function() {
     
     var itemName=$("#item-name-"+row).val();
     //console.log(itemName);
-    if(itemName==="Add New"){
-        $('#add-item-Modal form').trigger('reset'); //for resetting values
-        $('#add-item-Modal').modal();
-        $('#item-name-'+row).val(null).trigger('change.select2');
-        globalRow=row;
-        return;
-    }
-    
+   
+    globalRow=row;
     var xml=new XMLHttpRequest();
      xml.onreadystatechange=function(){
       if(this.readyState==4 && this.status==200){
@@ -547,6 +548,7 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
+                        console.log(data);
                 var hsn=document.getElementById('item-hsn-'+globalRow);
               hsn.value=data['hsn'];
          console.log(data);
@@ -562,6 +564,51 @@ $.ajax({
                     }
                 }
             });
+});
+
+$(document).ready(function(){ //function for adding a "Add new Button in options of select2"
+$('.items-dropdown').select2({
+   "language": {
+       "noResults": function(){
+           return "No Results Found <a href='#' class='btn btn-sm btn-info add-new-item' style='width:100%'>Add new item</a>";
+       }
+   },
+    escapeMarkup: function (markup) {
+        return markup;
+    }
+});
+});
+
+$(document).on('click','.add-new-item',function(){
+
+
+ 
+        $('#add-item-Modal form').trigger('reset'); //for resetting values
+        $('#item-name-'+globalRow).select2('close');
+        $('#add-item-Modal').modal();
+        
+        
+    
+
+});
+
+$(document).ready(function(){
+$(".item-type-class").select2({
+    minimumResultsForSearch: Infinity
+});
+});
+
+$(document).ready(function(){
+$('.radio-inline').on('click','label',function(){
+if($(this).attr('id')=="type_0"){
+  $(this).css({"background-color":"#398439","color":"white"});
+  $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
+}
+else{
+$(this).css({"background-color":"#AC2925","color":"white"});
+  $('#type_0').css({"background-color":"#E7E7E7","color":"black"});
+}
+});
 });
 
 

@@ -26,13 +26,15 @@ Route::get('/autofill','Sales\Sales@autoFill');
 Route::post('/vendorInfo','Sales\Sales@vendorInfo');
 
 
-
-
-
 Route::get('test', function () {
     $GstRate = App\Models\Tax\Cess::find(0)->rate;
     echo($GstRate);
-})
+});
+
+Route::get('put', function() {
+    Storage::cloud()->put('test.txt', 'Hello World');
+    return 'File was saved to Google Drive';
+});
 
 
 ?>

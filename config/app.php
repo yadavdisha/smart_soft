@@ -194,6 +194,8 @@ return [
         RachidLaasri\LaravelInstaller\Providers\LaravelInstallerServiceProvider::class,
         //Laravel Permissions
         Spatie\Permission\PermissionServiceProvider::class,
+        //Google Drive Driver ivanvermeyen/laravel-google-drive-demo
+        App\Providers\GoogleDriveServiceProvider::class,
     ],
 
     /*

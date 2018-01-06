@@ -192,6 +192,8 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         //Laravel Installer
         RachidLaasri\LaravelInstaller\Providers\LaravelInstallerServiceProvider::class,
+        //Laravel Permissions
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*

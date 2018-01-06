@@ -57,7 +57,7 @@ class Sales extends Controller
     public function store(Request $request)
     {
         //
-         $user = Vendor::create($request->all());
+          $user = Vendor::create($request->all());
         // return redirect()->route('/sales');
         // return view('sales.sales');
              return redirect("sales");
@@ -114,7 +114,9 @@ class Sales extends Controller
         $data=$req->item;  //item is the get data from url
         //var_dump($data);
         $item_details=Item::where('name','=',$data)->get()->toArray();
-        
+        $gst_type=HSN::where('hsn','=',$item_details[0]['hsn'])->pluck('gst_id')->toArray();
+         $item_details[0]['gst']=$gst_type[0];
+        //dd($item_details[0]);
         //dd(json_encode($item_details[0]));
        
         return json_encode($item_details[0]);
@@ -127,7 +129,7 @@ class Sales extends Controller
         return json_encode($vendor_state);
     }
 
-    //to retrieve enum values from  database as an array
+     //to retrieve enum values from  database as an array
     public static function getEnumValues($table, $column) {
       $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
       preg_match('/^enum\((.*)\)$/', $type, $matches);
@@ -139,10 +141,4 @@ class Sales extends Controller
       }
       return $enum;
     }
-
-    public function save_data(Request $request){     
-
-    }
-
-
 }

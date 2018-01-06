@@ -190,6 +190,10 @@ return [
         Lavary\Menu\ServiceProvider::class,
         //Laravel Flash
         Laracasts\Flash\FlashServiceProvider::class,
+        //Laravel Installer
+        RachidLaasri\LaravelInstaller\Providers\LaravelInstallerServiceProvider::class,
+        //Laravel Permissions
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*

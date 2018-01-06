@@ -4,12 +4,13 @@
 /storage/*.key
 /.idea
 /.vagrant
+/vendor
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 .env
 .DS_Store
-.DS_Store
-.DS_Store
 .env.example
+.DS_Store
+.DS_Store

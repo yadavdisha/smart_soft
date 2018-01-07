@@ -64,7 +64,6 @@
   </div>
 </div>
 
-
 <!-- Default box -->
   <div class="box box-success">
     {!! Form::open(['url' => 'incomes/invoices', 'files' => true, 'role' => 'form']) !!}
@@ -456,6 +455,7 @@ color:white;
             .on('select2:open', () => {
                     $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
             });
+
 
 
             //Select2 For State ID

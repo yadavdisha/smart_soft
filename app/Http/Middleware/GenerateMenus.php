@@ -30,12 +30,10 @@ class GenerateMenus
                 ->append('</span>')
                 ->append('<span class="pull-right-container">')
                 ->append('<i class="fa fa-angle-left pull-right"></i>')
-                ->append('</span>')
-                ->active();
+                ->append('</span>');
 
-            $menu->get('dashboard')->add('Dashboard' , ['url' => 'dashboard'])
-                ->prepend('<i class="fa fa-circle-o"></i>')
-                ->active();
+            $menu->get('dashboard')->add('Dashboard' , ['url' => ''])
+                ->prepend('<i class="fa fa-circle-o"></i>');
 
 
 
@@ -81,6 +79,9 @@ class GenerateMenus
                 ->append('<span class="pull-right-container">')
                 ->append('<i class="fa fa-angle-left pull-right"></i>')
                 ->append('</span>');
+
+            $menu->get('sales')->add('Sales' , ['action'  => 'Sales\Sales@index'])
+                ->prepend('<i class="fa fa-circle-o"></i>');
 
 
 

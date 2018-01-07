@@ -51,7 +51,7 @@ class Items extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {  
         Item::create($request->all());
         return redirect('items');
     }

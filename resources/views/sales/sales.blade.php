@@ -240,7 +240,7 @@
                 </select>
                    <br>
                    <br>
-                  {!! Form::select('unit_id', $units , 'UNIT', ['class' => 'select2 unit-class', 'placeholder' => 'Select GST']) !!}
+                  {!! Form::select('unit_modal', $units , 'UNIT', ['class' => 'select2 unit-class', 'placeholder' => 'Select Unit']) !!}
 
                      <br>
                      <br>
@@ -493,7 +493,7 @@ color:white;
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                 success: function(data) {
                     if (data) {
-                         console.log(data);
+                         //console.log(data);
                         $.each( data.items, function( key, itemData ) {
                             $.each( itemData , function (attr , subvalue) {
                                 if(attr == 'total')
@@ -553,8 +553,8 @@ $.ajax({
                       $('input[name="item['+ogRow+'][gst_id]"]').val(data['gst_id']);
                       rowsDetails[ogRow].gst=data['gst_id'];
                       rowsDetails[ogRow].type=data['item_type'];
-                      console.log(data);
-                      console.log(rowsDetails);
+                      //console.log(data);
+                      //console.log(rowsDetails);
                        $('#item-details-Modal .select2').trigger('change.select2');
                        itemCalculate();
                     }
@@ -607,7 +607,6 @@ $(document).ready(function() {
 
 
 $(document).on('submit','.add-item-form',function(event){
-console.log("lol");
 event.preventDefault();
 $.ajax({
                 url: '{{ url("/items/ajaxStore") }}',
@@ -618,19 +617,19 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
-                        console.log(data);
-                var hsn=document.getElementById('item-hsn-'+globalRow);
-              hsn.value=data['hsn'];
-         console.log(data);
-        document.getElementById('item-type-'+globalRow).value=data['type'];
-        document.getElementById('item-tax-'+globalRow).value=data['unit_id'];
-         document.getElementById('item-gst-'+globalRow).value=data['gst'];
+
+                    rowsDetails[ogRow]=data;
+               
+                   
+        // document.getElementById('item-type-'+globalRow).value=data['type'];
+        // document.getElementById('item-tax-'+globalRow).value=data['unit_id'];
+        //  document.getElementById('item-gst-'+globalRow).value=data['gst'];
          var option = new Option(data.name,data.name, true, true);  // Option(innerHTML,value,selected,actual Selection)
          $('#item-name-'+globalRow).append(option);
 
           $('.select2').trigger('change.select2'); //for updating select2 selected option
-          itemCalculate();
           $('#add-item-Modal').modal('hide');
+          itemCalculate();
                     }
                 }
             });
@@ -638,7 +637,8 @@ $.ajax({
 
 $(document).ready(function(){ //function for adding a "Add new Button in options of select2"
 $('.items-dropdown').on('select2:open', () => {
-        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:90%;margin:1%;border-radius:0px;border:none;'>Add new item</a>");
+  console.log("first");
+        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:85%;margin:1%;border-radius:0px;border:none;'>Add new item</a>");
 });
 
 });
@@ -648,6 +648,7 @@ $(document).on('click','.add-new-item',function(){
 
 
         globalRow=$(this).attr("data-row");
+        console.log(globalRow);
         $('#add-item-Modal form').trigger('reset'); //for resetting values
         $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
         $('#type_0').css({"background-color":"#E7E7E7","color":"black"}); //for resetting the radio button in modal
@@ -683,7 +684,7 @@ $(this).css({"background-color":"#AC2925","color":"white"});
 });
 
 $(document).on('mouseover','.add-new-item',function(){
-    console.log("lol");
+    //console.log("lol");
 $('.select2-results__option').removeClass('select2-results__option--highlighted');
 });
 $(document).ready(function(){
@@ -702,7 +703,7 @@ $(document).on('click','.extra-info-modal',function(){
 
         globalRow=$(this).attr("data-row");
         $('#item-details-Modal .select2').val("").trigger('change.select2'); //for resetting values
-        console.log("modal");
+        //console.log("modal");
         if(!rowsDetails[globalRow]){
       alert("Please Select Item First");
       return;
@@ -732,7 +733,9 @@ $('.extra-info-popup').on('shown.bs.popover', function () {
    row=row[row.length-1];
     //console.log(row);
         if(rowsDetails[row]){
-       $(this).attr("data-content",'SKU:'+rowsDetails[row].sku+'<br>HSN:'+rowsDetails[row].hsn+'<br>Type:'+rowsDetails[row].type+'<br>Unit:'+rowsDetails[row].unit_id+'<br>GST Type:'+rowsDetails[row].gst+'<br><br><button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row='+row+'>Edit</button>').data('bs.popover').setContent();
+          var unit=$('select[name="unit_modal"]')[0].options[parseInt(rowsDetails[row].unit_id)+1].innerHTML
+          var gst=$('select[name="gst"]')[0].options[parseInt(rowsDetails[row].gst)+1].innerHTML
+       $(this).attr("data-content",'SKU:'+rowsDetails[row].sku+'<br>HSN:'+rowsDetails[row].hsn+'<br>Type:'+rowsDetails[row].type+'<br>Unit:'+unit+'<br>GST Type:'+gst+'<br><br><button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row='+row+'>Edit</button>').data('bs.popover').setContent();
 
         }
    
@@ -749,7 +752,7 @@ if($(this).attr("name")=="gst"){
 
 
 $(document).ready(function(){
-$('.items-dropdown').on('select2:open',function(){
+$('.items-dropdown').on('select2:opening',function(){
     var row = $(this).parent().parent().attr('id');
    row=row[row.length-1];
    ogRow=row;

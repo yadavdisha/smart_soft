@@ -14,12 +14,9 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
         "lavary/laravel-menu": "^1.7",
-<<<<<<< HEAD
         "rachidlaasri/laravel-installer": "^3.1",
-        "spatie/laravel-permission": "^2.7"
-=======
-        "rachidlaasri/laravel-installer": "^3.1"
->>>>>>> 72117ba6e45440490c361a2dbdf48131df459cb5
+        "spatie/laravel-permission": "^2.7",
+        "nao-pon/flysystem-google-drive": "~1.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

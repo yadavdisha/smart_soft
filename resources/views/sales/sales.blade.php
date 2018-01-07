@@ -89,13 +89,13 @@
                         
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
-                            <th  colspan="1" rowspan="2" class="text-center">{{ 'HSN Code' }}</th>
-                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Item Type' }}</th>       
+                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Extra Info' }}</th>
+                                   
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
-                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Unit' }}</th>
+                            
                             <th  colspan="1" rowspan="1" class="text-center" >{{ 'Rate' }}</th>
                             <th  rowspan="1" colspan="1" class="text-center">{{ 'Discount' }}</th>
-                            <th  colspan="1" rowspan="2" class="text-center">{{ 'GST Type' }}</th>
+                            
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Tax Amount' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Total Amount' }}</th>
                             
@@ -150,18 +150,14 @@
                             </td>
 
                             <!-- HSN Code -->
-                            <td>
-                                {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['id'=> 'item-hsn-'. $item_row, 'class' => 'select2 hsn-code', 'placeholder' => 'Select HSN']) !!}
+                            <td class="text-center">
+                                 <span id="item-extra-info-0" class="extra-info-popup" data-toggle="popover" data-trigger="click" data-placement="bottom" data-content='<button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row="{{ $item_row }}">Edit</button><br><br>' data-html="true"><i style="font-size:1.5vw;color:blue" class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i></span>
+                                
+                                
                             </td>
 
                             <!-- Item Type -->
-                            <td>
-                                <select class="select2 item-type-class" required="required"  name="item[{{ $item_row }}][type]"  id="item-type-{{ $item_row }}">
-                                    <option disabled selected>Select Type</option>
-                                    <option value="Goods">Goods</option>
-                                    <option value="Services">Services</option>
-                                </select>
-                            </td>
+                            
 
                             <!-- Quantity -->
                             <td>
@@ -170,9 +166,7 @@
 
 
                             <!-- Unit -->
-                            <td>
-                                {!! Form::select('item[' . $item_row . '][unit_id]', $units , 'UNIT', ['id'=> 'item-tax-'. $item_row, 'class' => 'select2', 'placeholder' => 'Select GST']) !!}
-                            </td>
+                            
 
                             <!-- Rate -->
                             <td>
@@ -186,9 +180,7 @@
                             </td>
                             
                             <!-- GST ID -->
-                            <td>
-                                {!! Form::select('item[' . $item_row . '][gst_id]', $gst , 'GST', ['id'=> 'item-gst-'. $item_row, 'class' => 'select2 gst-type', 'placeholder' => 'Select GST']) !!}
-                            </td>
+                            
    
                             <!-- Total Tax -->
                             <td class="text-right" style="vertical-align: middle;">
@@ -199,6 +191,7 @@
                             <!-- Product Total -->
                             <td class="text-right" style="vertical-align: middle;">
                                 <span id="item-total-{{ $item_row }}">0</span>
+                                <input type="hidden" name="item[{{ $item_row }}][gst_id]" class="hidden-gst-id"/>
                             </td>
 
                        
@@ -210,21 +203,21 @@
                         <tr id="addItem">
                             <td class="text-center"><button type="button" onclick="addItem();" data-toggle="tooltip" title="{{ trans('general.add') }}" class="btn btn-xs btn-primary" data-original-title="{{ trans('general.add') }}"><i class="fa fa-plus"></i></button></td>
 
-                            <td class="text-right" colspan="10"></td>
+                            <td class="text-right" colspan="7"></td>
                         </tr>
 
                         <tr>
-                            <td class="text-right" colspan="10"><strong>{{ 'Total Taxable Value' }}</strong></td>
+                            <td class="text-right" colspan="7"><strong>{{ 'Total Taxable Value' }}</strong></td>
 
                             <td class="text-right"><span id="sub-total">0</span></td>
                         </tr>
                         <tr>
-                            <td class="text-right" colspan="10"><strong>{{ 'Total Tax Amount' }}</strong></td>
+                            <td class="text-right" colspan="7"><strong>{{ 'Total Tax Amount' }}</strong></td>
 
                             <td class="text-right"><span id="tax-total">0</span></td>
                         </tr>
                         <tr>
-                            <td class="text-right" colspan="10"><strong>{{ 'Total Invoice Amount' }}</strong></td>
+                            <td class="text-right" colspan="7"><strong>{{ 'Total Invoice Amount' }}</strong></td>
 
                             <td class="text-right"><span id="grand-total">0</span></td>
                         </tr>
@@ -285,6 +278,52 @@
   </div>
 </div>
 
+
+    <!-- Modal -->
+<div id="item-details-Modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Item Details</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="box-body">
+              {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['class' => 'select2 hsn-code', 'placeholder' => 'Select HSN']) !!} 
+              <br>
+              <br>
+               <select class="select2 item-type-class" required="required"  name="type">
+                                    
+                                    <option value="Goods">Goods</option>
+                                    <option value="Services">Services</option>
+                </select>
+                   <br>
+                   <br>
+                  {!! Form::select('unit_id', $units , 'UNIT', ['class' => 'select2 unit-class', 'placeholder' => 'Select GST']) !!}
+
+                     <br>
+                     <br>
+                   {!! Form::select('gst', $gst , 'GST', ['class' => 'select2 gst-type', 'placeholder' => 'Select GST']) !!}
+                     <br>
+                      <br>
+
+             
+            </div>
+             </form>
+           <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">Done</button>
+            </div>
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
    
 @endsection
 
@@ -310,12 +349,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style type="text/css">
-.input-group .select2-container{
+.input-group .select2-container,#item-details-Modal .select2-container {
   width:100% !important;  
 }
 
-   td input.form-control{
-        border-radius: 9%;
+   #item-details-Modal input.form-control,td input.form-control{
+        border-radius: 4%;
         height:4.2vh;
         border-color: grey;
 
@@ -327,6 +366,23 @@
     th[rowspan]{
     vertical-align: top !important;
 }
+
+.select2-results a:hover{
+background-color:#5897FB;
+color:white;
+
+}
+
+.fa-cog:hover{
+    font-size: 2vw !important;
+    cursor:pointer;
+}
+
+
+
+
+
+
 </style>
 
 @endsection
@@ -337,7 +393,8 @@
     <script type="text/javascript">
         var item_row = '{{ $item_row }}';
 
-        var globalRow=0;
+        var ogRow;
+        var rowsDetails=new Array();
 
 
         function addItem() {
@@ -396,11 +453,9 @@
 
 
             })
-             .on('select2:open', () => {
+            .on('select2:open', () => {
                     $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
             });
-
-
 
 
             //Select2 For State ID
@@ -495,7 +550,7 @@
                 url: '{{ url("items/itemCalculate") }}',
                 type: 'POST',
                 dataType: 'JSON',
-                data: $('#supply_state_id, input[name=\'discountType\']:checked, #items input[type=\'text\'],#items input[type=\'hidden\'], #items textarea, #items select,input[name=\'rateType\']:checked'),
+                data: $('#supply_state_id, input[name=\'discountType\']:checked, #items input[type=\'text\'],#items input[type=\'hidden\'], #items textarea,input[name=\'rateType\']:checked'),
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                 success: function(data) {
                     if (data) {
@@ -508,15 +563,18 @@
                                     $('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-tax-' + key).html(subvalue);
                             //$('#item-total-' + key).html(subvalue);
-                             row=key;
+                      
+                             
                             });
+
+                      $("#item-tax-info-"+key).attr("data-content","CGST:"+data.items[key].cgst+"<br>SGST:"+data.items[key].sgst+"<br>IGST:"+data.items[key].igst+"<br>UGST:"+data.items[key].ugst).data('bs.popover').setContent();      
                             
                         });
                         
                         $('#sub-total').html(data.sub_total);
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
-                         $("#item-tax-info-"+row).attr('data-content',"CGST:"+data.items[0].cgst+"<br>SGST:"+data.items[0].sgst+"<br>IGST:"+data.items[0].igst+"<br>UGST:"+data.items[0].ugst).data('bs.popover').setContent();//used for reinitializing the popover element after changing content
+                         //used for reinitializing the popover element after changing content
                     }
                 }
             });
@@ -532,11 +590,13 @@
      $(document).ready(function(){
         
      $(".item-tax-info").popover();
+     $('.extra-info-popup').popover();
 });
 
 $(document).on('change','.hsn-code',function(){
-var row = $(this).parent().parent().index();
-//console.log(row);
+
+rowsDetails[ogRow].hsn=$(this).val();
+
 
 $.ajax({
                 url: '{{ url("/hsn") }}',
@@ -547,10 +607,16 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
-                        //console.log(data['item_type']);
-                       document.getElementById('item-type-'+row).value=data['item_type'];
-                       document.getElementById('item-gst-'+row).value=data['gst_id'];
-                       $('.select2').trigger('change.select2');
+                        
+                       
+                      $('#item-details-Modal select')[1].value=data['item_type'];
+                      $('#item-details-Modal select')[3].value=data['gst_id'];
+                      $('input[name="item['+ogRow+'][gst_id]"]').val(data['gst_id']);
+                      rowsDetails[ogRow].gst=data['gst_id'];
+                      rowsDetails[ogRow].type=data['item_type'];
+                      console.log(data);
+                      console.log(rowsDetails);
+                       $('#item-details-Modal .select2').trigger('change.select2');
                        itemCalculate();
                     }
                 }
@@ -560,31 +626,32 @@ $.ajax({
    
 
 $(document).ready(function() {
+    $('#item-details-Modal .select2').select2();
     $('td .select2').select2();
 });
+
+
 
 $(document).ready(function() {
     $('.items-dropdown').on('select2:select',function(){
   
-   var row = $(this).parent().parent().index();
+   var row = $(this).parent().parent().attr('id');
+   row=row[row.length-1];
     
     var itemName=$("#item-name-"+row).val();
     //console.log(itemName);
    
-    globalRow=row;
+
     var xml=new XMLHttpRequest();
      xml.onreadystatechange=function(){
       if(this.readyState==4 && this.status==200){
         var item_details=JSON.parse(this.responseText);
         console.log(item_details);
         if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
-        var hsn=document.getElementById('item-hsn-'+row);
-         hsn.value=item_details['hsn'];
-         console.log(item_details['type']);
-        document.getElementById('item-type-'+row).value=item_details['type'];
-        document.getElementById('item-tax-'+row).value=item_details['unit_id'];
-         document.getElementById('item-gst-'+row).value=item_details['gst'];
-        $('.select2').trigger('change.select2'); //for updating select2 selected option
+         rowsDetails[row]=item_details;
+         $('input[name="item['+row+'][gst_id]"]').val(rowsDetails[row]['gst']);
+         //console.log(row);
+         //console.log(rowsDetails);
         itemCalculate();
 
 
@@ -631,22 +698,17 @@ $.ajax({
 });
 
 $(document).ready(function(){ //function for adding a "Add new Button in options of select2"
-$('.items-dropdown').select2({
-   "language": {
-       "noResults": function(){
-           return "No Results Found <a href='#' class='btn btn-sm btn-info add-new-item' style='width:100%'>Add new item</a>";
-       }
-   },
-    escapeMarkup: function (markup) {
-        return markup;
-    }
+$('.items-dropdown').on('select2:open', () => {
+        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:90%;margin:1%;border-radius:0px;border:none;'>Add new item</a>");
 });
+
 });
+
 
 $(document).on('click','.add-new-item',function(){
 
 
- 
+        globalRow=$(this).attr("data-row");
         $('#add-item-Modal form').trigger('reset'); //for resetting values
         $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
         $('#type_0').css({"background-color":"#E7E7E7","color":"black"}); //for resetting the radio button in modal
@@ -654,6 +716,7 @@ $(document).on('click','.add-new-item',function(){
         $('#type_1').removeClass("active");
         $('#item-name-'+globalRow).select2('close');
         $('#add-item-Modal').modal();
+        ogRow=globalRow; //for accessing the unique row number in modal
         
         
     
@@ -662,7 +725,8 @@ $(document).on('click','.add-new-item',function(){
 
 $(document).ready(function(){
 $(".item-type-class").select2({
-    minimumResultsForSearch: Infinity
+    minimumResultsForSearch: Infinity,
+    placeholder:"Select Type",  
 });
 });
 
@@ -678,6 +742,82 @@ $(this).css({"background-color":"#AC2925","color":"white"});
 }
 });
 });
+
+$(document).on('mouseover','.add-new-item',function(){
+    console.log("lol");
+$('.select2-results__option').removeClass('select2-results__option--highlighted');
+});
+$(document).ready(function(){
+$('.items-dropdown').on('select2:open',function(){
+ogRow=$(this).parent().parent().attr("id");
+ogRow=ogRow[ogRow.length-1];
+//console.log(ogRow);
+});
+
+});
+
+
+
+$(document).on('click','.extra-info-modal',function(){
+
+
+        globalRow=$(this).attr("data-row");
+        $('#item-details-Modal .select2').val("").trigger('change.select2'); //for resetting values
+        console.log("modal");
+        if(!rowsDetails[globalRow]){
+      alert("Please Select Item First");
+      return;
+        }
+        $('#item-details-Modal').modal();
+        $('.extra-info-popup').trigger('click');
+       
+        if(rowsDetails[globalRow]){
+            //console.log("if")
+          $('#item-details-Modal select')[0].value=rowsDetails[globalRow].hsn;
+          $('#item-details-Modal select')[1].value=rowsDetails[globalRow].type;
+          $('#item-details-Modal select')[2].value=rowsDetails[globalRow].unit_id;
+          $('#item-details-Modal select')[3].value=rowsDetails[globalRow].gst;
+          $('#item-details-Modal select').trigger('change.select2');
+        }
+
+        ogRow=globalRow;
+        //console.log(ogRow);
+        
+    
+
+});
+$(document).ready(function(){
+$('.extra-info-popup').on('shown.bs.popover', function () {
+  // do something…
+   var row=$(this).parent().parent().attr("id");
+   row=row[row.length-1];
+    //console.log(row);
+        if(rowsDetails[row]){
+       $(this).attr("data-content",'SKU:'+rowsDetails[row].sku+'<br>HSN:'+rowsDetails[row].hsn+'<br>Type:'+rowsDetails[row].type+'<br>Unit:'+rowsDetails[row].unit_id+'<br>GST Type:'+rowsDetails[row].gst+'<br><br><button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row='+row+'>Edit</button>').data('bs.popover').setContent();
+
+        }
+   
+});
+});
+
+$(document).on('change','#item-details-Modal select',function(){
+rowsDetails[ogRow][$(this).attr("name")]=$(this).val();
+//console.log(rowsDetails);
+if($(this).attr("name")=="gst"){
+    $('input[name="item['+ogRow+'][gst_id]"]').val(rowsDetails[ogRow]['gst']);
+}
+});
+
+
+$(document).ready(function(){
+$('.items-dropdown').on('select2:open',function(){
+    var row = $(this).parent().parent().attr('id');
+   row=row[row.length-1];
+   ogRow=row;
+   //console.log(row);
+})
+
+    });
 
 
     </script>

@@ -57,10 +57,10 @@ class Sales extends Controller
     public function store(Request $request)
     {
         //
-          $user = Vendor::create($request->all());
+        $user = Vendor::create($request->all());
         // return redirect()->route('/sales');
         // return view('sales.sales');
-             return redirect("sales");
+         return redirect("sales");
     }
     
     /**

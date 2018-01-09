@@ -34,7 +34,6 @@ class AddForeignKeysToSalesItemsTable extends Migration
         //
         Schema::table('sales_items', function(Blueprint $table)
         {
-            $table->dropForeign('fk_sales_item_sales_id');
             $table->dropForeign('fk_sales_item_id');
             $table->dropForeign('fk_sales_item_hsn');
             $table->dropForeign('fk_sales_item_unit_id');

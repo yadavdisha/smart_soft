@@ -66,12 +66,14 @@
 
 <!-- Default box -->
   <div class="box box-success">
-    {!! Form::open(['url' => 'incomes/invoices', 'files' => true, 'role' => 'form']) !!}
+    {!! Form::open(['url' => 'sales', 'files' => true, 'role' => 'form']) !!}
 
 <div class="box-body">
         {{ Form::selectGroup('vendor_id', 'Party Name', 'user', $vendors) }}
 
-        {{ Form::textGroup('invoice_date', 'Invoice Date', 'calendar',['id' => 'invoice_date', 'class' => 'form-control', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
+        {{ Form::textGroup('invoice_date', 'Invoice Date', 'calendar',['id' => 'invoice_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
+
+        {{ Form::textGroup('order_date', 'Order Date', 'calendar',['id' => 'order_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
 
         {{ Form::textGroup('invoice_number', 'Invoice Number', 'file-text-o') }}
 
@@ -150,7 +152,7 @@
 
                             <!-- HSN Code -->
                             <td class="text-center">
-                                 <span id="item-extra-info-0" class="extra-info-popup" data-toggle="popover" data-trigger="click" data-placement="bottom" data-content='<button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row="{{ $item_row }}">Edit</button><br><br>' data-html="true"><i style="font-size:1.5vw;color:blue" class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i></span>
+                                 <span id="item-extra-info-0" class="extra-info-popup" data-toggle="popover" data-trigger="click" tabindex="0" data-placement="bottom" data-content='<button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row="{{ $item_row }}">Edit</button><br><br>' data-html="true"><i style="font-size:1.5vw;color:blue" class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i></span>
                                 
                                 
                             </td>
@@ -191,6 +193,7 @@
                             <td class="text-right" style="vertical-align: middle;">
                                 <span id="item-total-{{ $item_row }}">0</span>
                                 <input type="hidden" name="item[{{ $item_row }}][gst_id]" class="hidden-gst-id"/>
+                                <input type="hidden" name="item[{{ $item_row }}][cess_id]" class="hidden-cess-id"/>
                             </td>
 
                        
@@ -228,6 +231,8 @@
         {{ Form::textareaGroup('notes', trans_choice('general.notes', 2)) }}
 
         {{ Form::fileGroup('attachment', trans('general.attachment')) }}
+        <input type="hidden" name="table-object" id="table-object">
+        <input type="hidden" name="common-object" id="common-object">
     </div>
     <!-- /.box-body -->
 
@@ -294,20 +299,23 @@
               {!! Form::select('item[' . $item_row . '][tax_id]', $hsn , 'HSN Code', ['class' => 'select2 hsn-code', 'placeholder' => 'Select HSN']) !!} 
               <br>
               <br>
-               <select class="select2 item-type-class" required="required"  name="type">
+               <select class="select2 item-type-class no-ajax" required="required"  name="type">
                                     
                                     <option value="Goods">Goods</option>
                                     <option value="Services">Services</option>
                 </select>
                    <br>
                    <br>
-                  {!! Form::select('unit_modal', $units , 'UNIT', ['class' => 'select2 unit-class', 'placeholder' => 'Select Unit']) !!}
+                  {!! Form::select('unit_modal', $units , 'UNIT', ['class' => 'select2 unit-class no-ajax', 'placeholder' => 'Select Unit']) !!}
 
                      <br>
                      <br>
-                   {!! Form::select('gst', $gst , 'GST', ['class' => 'select2 gst-type', 'placeholder' => 'Select GST']) !!}
+                   {!! Form::select('gst', $gst , 'GST', ['class' => 'select2 gst-type no-ajax', 'placeholder' => 'Select GST']) !!}
                      <br>
                       <br>
+
+                    {!! Form::select('cess', $cess , 'Cess', ['class' => 'select2 cess-type no-ajax', 'placeholder' => 'Select CESS']) !!}
+
 
              
             </div>
@@ -367,7 +375,7 @@
 }
 
 .select2-results a:hover{
-background-color:#5897FB;
+background-color:#5897FB !important;
 color:white;
 
 }
@@ -375,6 +383,10 @@ color:white;
 .fa-cog:hover{
     font-size: 2vw !important;
     cursor:pointer;
+}
+
+.add-new-item{
+  padding:0;
 }
 
 
@@ -393,7 +405,7 @@ color:white;
         var item_row = '{{ $item_row }}';
 
         var ogRow;
-        var rowsDetails=new Array();
+        var rowsDetails={};
 
 
         function addItem() {
@@ -414,8 +426,8 @@ color:white;
 
        $(document).ready(function(){
             //Date picker
-            $('#invoice_date').datepicker({
-                format: 'yyyy-mm-dd',
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd',
                 autoclose: true
             });
 
@@ -518,10 +530,7 @@ color:white;
                 itemCalculate();
             });
 
-            $(document).on('change','.gst-type',function(){
-            
-              itemCalculate();
-            });
+          
 
             $(document).on('change', '#vendor_id', function (e) {
                 $.ajax({
@@ -554,7 +563,7 @@ color:white;
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                 success: function(data) {
                     if (data) {
-                         //console.log(data);
+                         console.log(data);
                         $.each( data.items, function( key, itemData ) {
                             $.each( itemData , function (attr , subvalue) {
                                 if(attr == 'total')
@@ -566,8 +575,12 @@ color:white;
                       
                              
                             });
-
-                      $("#item-tax-info-"+key).attr("data-content","CGST:"+data.items[key].cgst+"<br>SGST:"+data.items[key].sgst+"<br>IGST:"+data.items[key].igst+"<br>UGST:"+data.items[key].ugst).data('bs.popover').setContent();      
+                       rowsDetails[key].cgst=data.items[key].cgst;
+                       rowsDetails[key].sgst= data.items[key].sgst;
+                       rowsDetails[key].ugst=data.items[key].ugst; 
+                       rowsDetails[key].igst=data.items[key].igst;
+                       rowsDetails[key].cess_amount=data.items[key].cess;  
+                      $("#item-tax-info-"+key).attr("data-content","CGST:"+data.items[key].cgst+"<br>SGST:"+data.items[key].sgst+"<br>IGST:"+data.items[key].igst+"<br>UGST:"+data.items[key].ugst+"<br>Cess:"+data.items[key].cess).data('bs.popover').setContent();      
                             
                         });
                         
@@ -575,6 +588,7 @@ color:white;
                         $('#tax-total').html(data.tax_total);
                         $('#grand-total').html(data.grand_total);
                          //used for reinitializing the popover element after changing content
+                        //console.log(rowsDetails[0]);
                     }
                 }
             });
@@ -607,16 +621,20 @@ $.ajax({
                 success: function(data) {
                      
                     if (data) {
-                        
+                        console.log(data);
                        
-                      $('#item-details-Modal select')[1].value=data['item_type'];
-                      $('#item-details-Modal select')[3].value=data['gst_id'];
-                      $('input[name="item['+ogRow+'][gst_id]"]').val(data['gst_id']);
-                      rowsDetails[ogRow].gst=data['gst_id'];
-                      rowsDetails[ogRow].type=data['item_type'];
+                      $('#item-details-Modal select')[1].value=data[0]['item_type'];
+                      $('#item-details-Modal select')[3].value=data[0]['gst_id'];
+                      $('#item-details-Modal select')[4].value=data[0]['cess_id'];
+                      $('input[name="item['+ogRow+'][gst_id]"]').val(data[0]['gst_id']);
+                      $('input[name="item['+ogRow+'][cess_id]"]').val(data[0]['cess_id']);
+                      rowsDetails[ogRow].gst=data[0]['gst_id'];
+                      rowsDetails[ogRow].cess=data[0]['cess_id'];
+                      rowsDetails[ogRow].type=data[0]['item_type'];
                       //console.log(data);
                       //console.log(rowsDetails);
                        $('#item-details-Modal .select2').trigger('change.select2');
+
                        itemCalculate();
                     }
                 }
@@ -650,6 +668,7 @@ $(document).ready(function() {
         if(Object.keys(item_details).length>0){// Object.keys(item_details).length used to calculate length of object 
          rowsDetails[row]=item_details;
          $('input[name="item['+row+'][gst_id]"]').val(rowsDetails[row]['gst']);
+         $('input[name="item['+row+'][cess_id]"]').val(rowsDetails[row]['cess']);
          //console.log(row);
          //console.log(rowsDetails);
         itemCalculate();
@@ -699,7 +718,7 @@ $.ajax({
 $(document).ready(function(){ //function for adding a "Add new Button in options of select2"
 $('.items-dropdown').on('select2:open', () => {
   console.log("first");
-        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:85%;margin:1%;border-radius:0px;border:none;'>Add new item</a>");
+        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:100%;margin:1%;border-radius:0px;border:none;background:none'>Add new item</a>");
 });
 
 });
@@ -778,10 +797,11 @@ $(document).on('click','.extra-info-modal',function(){
           $('#item-details-Modal select')[1].value=rowsDetails[globalRow].type;
           $('#item-details-Modal select')[2].value=rowsDetails[globalRow].unit_id;
           $('#item-details-Modal select')[3].value=rowsDetails[globalRow].gst;
+          $('#item-details-Modal select')[4].value=rowsDetails[globalRow].cess;
           $('#item-details-Modal select').trigger('change.select2');
         }
 
-        ogRow=globalRow;
+        ogRow=globalRow;// tells modal opened for which row in table
         //console.log(ogRow);
         
     
@@ -794,21 +814,27 @@ $('.extra-info-popup').on('shown.bs.popover', function () {
    row=row[row.length-1];
     //console.log(row);
         if(rowsDetails[row]){
-          var unit=$('select[name="unit_modal"]')[0].options[parseInt(rowsDetails[row].unit_id)+1].innerHTML
-          var gst=$('select[name="gst"]')[0].options[parseInt(rowsDetails[row].gst)+1].innerHTML
-       $(this).attr("data-content",'SKU:'+rowsDetails[row].sku+'<br>HSN:'+rowsDetails[row].hsn+'<br>Type:'+rowsDetails[row].type+'<br>Unit:'+unit+'<br>GST Type:'+gst+'<br><br><button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row='+row+'>Edit</button>').data('bs.popover').setContent();
+          var unit=$('select[name="unit_modal"]')[0].options[parseInt(rowsDetails[row].unit_id)+1].innerHTML;
+          var gst=$('select[name="gst"]')[0].options[parseInt(rowsDetails[row].gst)+1].innerHTML;
+          var cess=$('select[name="cess"]')[0].options[parseInt(rowsDetails[row].cess)+1].innerHTML;
+
+       $(this).attr("data-content",'SKU:'+rowsDetails[row].sku+'<br>HSN:'+rowsDetails[row].hsn+'<br>Type:'+rowsDetails[row].type+'<br>Unit:'+unit+'<br>GST Type:'+gst+'<br>Cess Type:'+cess+'<br><br><button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row='+row+'>Edit</button>').data('bs.popover').setContent();
 
         }
    
 });
 });
 
-$(document).on('change','#item-details-Modal select',function(){
-rowsDetails[ogRow][$(this).attr("name")]=$(this).val();
+$(document).on('change','#item-details-Modal .no-ajax',function(){
+rowsDetails[ogRow][$(this).attr("name")]=$(this).val();//changing values of changed element in extra info modal in rowsDetails using their name attributes 
 //console.log(rowsDetails);
 if($(this).attr("name")=="gst"){
     $('input[name="item['+ogRow+'][gst_id]"]').val(rowsDetails[ogRow]['gst']);
 }
+else if($(this).attr("name")=="cess"){
+$('input[name="item['+ogRow+'][cess_id]"]').val(rowsDetails[ogRow]['cess']);
+}
+itemCalculate();
 });
 
 
@@ -818,9 +844,53 @@ $('.items-dropdown').on('select2:opening',function(){
    row=row[row.length-1];
    ogRow=row;
    //console.log(row);
-})
+});
 
-    });
+
+$('.box-success>form').on('click','button[type="submit"]',function(event){
+commonDetails={total_discount:0,cgst:0,ugst:0,sgst:0,igst:0,cess:0};
+var nrows=$('#items tbody>tr').length-4;
+for(var i=0;i<(nrows);i++){
+  rowsDetails[i+""].quantity=$('tbody tr')[i].cells[3].children[0].value;
+  rowsDetails[i+""].unit_price=$('tbody tr')[i].cells[4].children[0].value;
+  rowsDetails[i+""].discount=$('tbody tr')[i].cells[5].children[0].value;
+  rowsDetails[i+""].tax_amount=$('#item-total-tax-'+i).text();
+  rowsDetails[i+""].total_amount=$('#item-total-'+i).text();
+  rowsDetails[i+""].taxable_value=parseInt(rowsDetails[i+""].quantity)*parseInt(rowsDetails[i+""].unit_price)-rowsDetails[i+""].discount;
+  commonDetails['total_discount']+=parseInt(rowsDetails[i+""].discount);
+  commonDetails['cgst']+=parseInt(rowsDetails[i+""].cgst);
+  commonDetails['ugst']+=parseInt(rowsDetails[i+""].ugst);
+  commonDetails['sgst']+=parseInt(rowsDetails[i+""].sgst);
+  commonDetails['igst']+=parseInt(rowsDetails[i+""].igst);
+  commonDetails['cess']+=parseInt(rowsDetails[i+""].cess_amount);
+}
+
+//console.log(rowsDetails);
+
+
+
+commonDetails['vendor_id']=$('#vendor_id').val();
+commonDetails['invoice_date']=$('#invoice_date').val();
+commonDetails['invoice_number']=$('#invoice_number').val();
+commonDetails['order_id']=$('#order_id').val();
+commonDetails['supply_state_id']=$('#supply_state_id').val();
+commonDetails['total_taxable_value']=$('#sub-total').text();
+commonDetails['total_tax_amount']=$('#tax-total').text();
+commonDetails['total_amount']=$('#grand-total').text();
+commonDetails['notes']=$('#notes').val();
+commonDetails['round_off']=Math.round(parseFloat($('#grand-total').text()));
+commonDetails['shipping_cost']=0;
+commonDetails['order_date']=$('#order_date').val();
+//console.log(commonDetails);
+$('#common-object').val(JSON.stringify(commonDetails));
+$('#table-object').val(JSON.stringify(rowsDetails));
+//console.log($('#common-object').val());
+//console.log($('#table-object').val());
+});
+
+
+
+  });
 
 
     </script>

@@ -1,9 +1,7 @@
 <?php
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-
 class AddForeignKeysToSalesItemsTable extends Migration
 {
     /**
@@ -23,7 +21,6 @@ class AddForeignKeysToSalesItemsTable extends Migration
             $table->foreign('cess_id', 'fk_sales_item_cess_id')->references('id')->on('cess')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
-
     /**
      * Reverse the migrations.
      *

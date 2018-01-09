@@ -394,6 +394,7 @@ color:white;
 
 
 
+
 </style>
 
 @endsection
@@ -465,7 +466,7 @@ color:white;
 
             })
             .on('select2:open', () => {
-                    $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;">Add New</a>');
+                    $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;width:100%">Add New</a>');
             });
 
 
@@ -767,6 +768,10 @@ $(document).on('mouseover','.add-new-item',function(){
     //console.log("lol");
 $('.select2-results__option').removeClass('select2-results__option--highlighted');
 });
+
+
+
+
 $(document).ready(function(){
 $('.items-dropdown').on('select2:open',function(){
 ogRow=$(this).parent().parent().attr("id");

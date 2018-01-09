@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Sales;
+namespace App\Models\Sale;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property SalesItem[] $salesItems
  * @property SalesPayment[] $salesPayments
  */
-class Sales extends Model
+class Sale extends Model
 {
     /**
      * The table associated with the model.
@@ -67,7 +67,6 @@ class Sales extends Model
     {
         return $this->belongsTo('App\Models\Vendor\VendorEcommerce', 'ecommerce_vendor_id');
     }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -75,7 +74,6 @@ class Sales extends Model
     {
         return $this->belongsTo('App\Models\Setting\State', 'supplier_state_id');
     }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -83,7 +81,6 @@ class Sales extends Model
     {
         return $this->belongsTo('App\Models\Setting\State', 'supply_state_id');
     }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -91,15 +88,13 @@ class Sales extends Model
     {
         return $this->belongsTo('App\Models\Vendor\Vendor');
     }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function salesItems()
     {
-        return $this->hasMany('App\Models\Sales\SalesItem', 'item_id');
+        return $this->hasMany('App\Models\Sales\SalesItem', 'sales_id');
     }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

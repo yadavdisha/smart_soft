@@ -10,6 +10,7 @@ use App\Models\Item\Item;
 use Illuminate\Support\Facades\DB;
 use App\libraries\GstCalculator;
 use App\Models\Tax\Gst;
+use Illuminate\Support\Collection;
 
 class Items extends Controller
 {
@@ -148,7 +149,7 @@ class Items extends Controller
 
                 //Get GST ID and Data from Database
                 $GstID = $item['gst_id'];
-                $CessId = 0;
+                $CessId = $item['cess_id'];
                 //$GstRates = Gst::find($GstID);
 
                 if($discountType == 1)
@@ -232,15 +233,19 @@ class Items extends Controller
     
          $hsn_code=$req->input('hsn_code');
          $data=HSN::where('hsn',$hsn_code)->get()->toArray();
-
-        return json_encode($data[0]);
+         //$data=$data->only(['gst_id','cess_id','item_type']) 
+        
+        return json_encode($data);
 
     }
 
     public function ajaxStore(Request $req){
         $item=Item::create($req->all());
-        $gst_type=HSN::where('hsn','=',$item->hsn)->pluck('gst_id')->toArray();
-        $item->gst=$gst_type[0];
+        $hsn_row=HSN::where('hsn','=',$item->hsn)->pluck('gst_id','cess_id')->toArray();
+        $gst_id=array_values($hsn_row);
+         $cess_id=array_keys($hsn_row);
+        $item->gst=$gst_id[0];
+        $item->cess=$cess_id[0];
         return json_encode($item);
     }
 }

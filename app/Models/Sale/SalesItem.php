@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Sales;
+namespace App\Models\Sale;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -71,15 +71,7 @@ class SalesItem extends Model
      */
     public function sales()
     {
-        return $this->belongsTo('App\Models\Sales\Sales', 'item_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function vendorEcommerce()
-    {
-        return $this->belongsTo('App\Models\Vendor\VendorEcommerce', 'sales_id');
+        return $this->belongsTo('App\Models\Sales\Sales', 'sales_id');
     }
 
     /**

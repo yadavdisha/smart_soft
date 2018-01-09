@@ -149,7 +149,7 @@ class Items extends Controller
 
                 //Get GST ID and Data from Database
                 $GstID = $item['gst_id'];
-                $CessId = 0;
+                $CessId = $item['cess_id'];
                 //$GstRates = Gst::find($GstID);
 
                 if($discountType == 1)

@@ -34,11 +34,6 @@ class Sales extends Controller
         $states = State::all()->pluck ('name' , 'id');
         $items=Item::pluck('name');
         $items=$items->toArray();
-<<<<<<< HEAD
-        $cess=Cess::all()->pluck ('description' , 'id');
-        //dd($items);
-        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','cess'));
-=======
 
          $vendor_type= Sales::getEnumValues('vendors','vendor_type');
         $business_type= Sales::getEnumValues('vendors','business_type');
@@ -46,7 +41,6 @@ class Sales extends Controller
         //dd($items);
         return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','vendor_type','business_type','cess'));
 
->>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
     }
 
     /**
@@ -68,10 +62,7 @@ class Sales extends Controller
      */
     public function store(Request $request)
     {
-<<<<<<< HEAD
-=======
 
->>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
         $sale_table=Sale::create(json_decode($request->input('common-object'),true));
         $sale_id=$sale_table->id;
         $items_table=json_decode($request->input('table-object'),true);
@@ -154,4 +145,18 @@ class Sales extends Controller
         $vendor_state=Vendor::where('id',$vendor_id)->pluck('state_id')->toArray();
         return json_encode($vendor_state);
     }
+
+    //to retrieve enum values from  database as an array
+    public static function getEnumValues($table, $column) {
+      $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
+      preg_match('/^enum\((.*)\)$/', $type, $matches);
+      $enum = array();
+      foreach( explode(',', $matches[1]) as $value )
+      {
+        $v = trim( $value, "'" );
+        $enum = array_add($enum, $v, $v);
+      }
+      return $enum;
+    }
+
 }

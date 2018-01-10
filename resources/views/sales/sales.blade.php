@@ -3,6 +3,67 @@
 @section('title', trans('general.title.new', ['type' => trans_choice('general.sales', 1)]))
 
 @section('content')
+
+<!-- Modal -->
+<div id="myModal" class="modal fade " style="z-index: 2500" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">New Vendor Details</h4>
+          
+      </div>
+
+      <div class="modal-body">
+         
+        {!! Form::open(array('url' => '/sales','action' => 'Sales@store')) !!}
+
+            {{ Form::textGroup('name', 'Name', 'id-card-o') }}
+            
+            {{ Form::selectGroup('vendor_type','Vendor Type','id-card-o', $vendor_type) }}
+
+            {{ Form::textGroup('gstin', 'GST No.', 'percent', []) }}
+            
+            {{ Form::textGroup('pan', 'PAN No.', 'id-badge', []) }}
+
+            {{ Form::emailGroup('email_id', 'Email', 'envelope', []) }}
+
+            {{ Form::textGroup('phone', 'Phone No.', 'phone', []) }}
+
+            {{ Form::textareaGroup('address','Address') }}
+
+            {{ Form::textGroup('city', 'City', 'home') }}
+
+            {{ Form::textGroup('state_id', 'State-id', 'home') }}
+
+            {{ Form::textGroup('country', 'Country', 'plane') }}
+
+            {{ Form::textGroup('pin_code', 'Pin-Code', 'paperclip') }}
+
+            {{ Form::textGroup('website', 'Website', 'globe',[]) }}
+
+            {{ Form::selectGroup('business_type','Business Type','briefcase', $business_type) }}
+
+
+      </div>
+
+      
+      <div class="modal-footer">
+       <!--  {{ Form::submit('Submit')}} -->
+
+       <button type="submit" class="btn btn-primary">Submit</button>
+
+        {!! Form::close() !!}
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- Default box -->
   <div class="box box-success">
     {!! Form::open(['url' => 'sales', 'files' => true, 'role' => 'form']) !!}
@@ -26,6 +87,7 @@
                 <table class="table table-bordered" style="font-size: 13px;" id="items">
                     <thead>
                         <tr style="background-color: #f9f9f9;">
+                        
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Extra Info' }}</th>
@@ -175,7 +237,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-        {{ Form::saveButtons('incomes/invoices') }}
+        {{ Form::saveButtons('sales/sales') }}
     </div>
     <!-- /.box-footer -->
 
@@ -404,11 +466,7 @@ color:white;
 
             })
             .on('select2:open', () => {
-<<<<<<< HEAD
-                    $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 1%;display:inline;">Add New</a>');
-=======
                     $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;width:100%">Add New</a>');
->>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
             });
 
 

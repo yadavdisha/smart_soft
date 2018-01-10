@@ -34,9 +34,19 @@ class Sales extends Controller
         $states = State::all()->pluck ('name' , 'id');
         $items=Item::pluck('name');
         $items=$items->toArray();
+<<<<<<< HEAD
         $cess=Cess::all()->pluck ('description' , 'id');
         //dd($items);
         return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','cess'));
+=======
+
+         $vendor_type= Sales::getEnumValues('vendors','vendor_type');
+        $business_type= Sales::getEnumValues('vendors','business_type');
+        $cess=Cess::all()->pluck ('description' , 'id');
+        //dd($items);
+        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','vendor_type','business_type','cess'));
+
+>>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
     }
 
     /**
@@ -58,6 +68,10 @@ class Sales extends Controller
      */
     public function store(Request $request)
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
         $sale_table=Sale::create(json_decode($request->input('common-object'),true));
         $sale_id=$sale_table->id;
         $items_table=json_decode($request->input('table-object'),true);

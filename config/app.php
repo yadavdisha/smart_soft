@@ -196,6 +196,8 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         //Google Drive Driver ivanvermeyen/laravel-google-drive-demo
         App\Providers\GoogleDriveServiceProvider::class,
+        //DomPDF
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -255,6 +257,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         //Lavary Menu
         'Menu'      => Lavary\Menu\Facade::class,
+        //DomPDF
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
 
 

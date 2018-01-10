@@ -20,10 +20,12 @@ Route::get('/', function () {
 Route::post('items/ajaxStore','Items\Items@ajaxStore');
 Route::resource('sales', 'Sales\Sales');
 Route::resource('items', 'Items\Items');
+Route::resource('vendors','Vendors\Vendors');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');
 Route::post('/vendorInfo','Sales\Sales@vendorInfo');
+Route::post('vendorajax','Vendors\Vendors@store1');
 
 
 Route::get('test', function () {

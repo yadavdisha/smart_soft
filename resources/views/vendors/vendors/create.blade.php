@@ -5,31 +5,48 @@
 @section('content')
     <!-- Default box -->
         <div class="box box-success">
-            {!! Form::open(['action' => 'Items\Items@store']) !!}
+            {!! Form::open(['action' => 'Vendors\Vendors@store']) !!}
 
             <div class="box-body">
-                {{ Form::textGroup('name', 'Item Name' , 'id-card-o') }}
 
-                {{ Form::textGroup('sku', 'Item SKU' , 'key') }}
+            {{ Form::textGroup('name', trans('general.name'), 'id-card-o') }}
+            
+            {{ Form::selectGroup('vendor_type', trans('general.vendor_type'),'id-card-o', $vendor_type) }}
 
-                {{ Form::selectGroup('hsn', 'HSN Code' , 'barcode', $hsn, '00000000' , []) }}
+            {{ Form::textGroup('gstin', 'GST No.', 'percent', []) }}
+            
+            {{ Form::textGroup('pan', 'PAN No.', 'id-badge', []) }}
 
-                {{ Form::selectGroup('unit_id', 'Unit' , 'balance-scale', $units, '59', []) }}
+            {{ Form::emailGroup('email_id', 'Email', 'envelope', []) }}
 
-                {{ Form::itemTypeGroup('type', 'Item Type' ) }}
+            {{ Form::textGroup('phone', 'Phone No.', 'phone', []) }}
 
-                {{ Form::textareaGroup('details', 'Item Details') }}
+            {{ Form::textareaGroup('address','Address') }}
+
+            {{ Form::textGroup('city', 'City', 'home') }}
+
+            {{ Form::textGroup('state_id', 'State-id', 'home') }}
+
+            {{ Form::textGroup('country', 'Country', 'plane') }}
+
+            {{ Form::textGroup('pin_code', 'Pin-Code', 'paperclip') }}
+
+            {{ Form::textGroup('website', 'Website', 'globe',[]) }}
+
+            {{ Form::selectGroup('business_type',trans('general.business_type'),'briefcase', $business_type) }}
+
             </div>
         <!-- /.box-body -->
 
         <div class="box-footer">
-            {{ Form::saveButtons('items/items') }}
+            {{ Form::saveButtons('vendors/vendors') }}
         </div>
         <!-- /.box-footer -->
 
         {!! Form::close() !!}
     </div>
 @endsection
+
 
 @section('js')
     <script src="{{ asset('js/bootstrap-fancyfile.js') }}"></script>
@@ -61,21 +78,6 @@
             });
 
         });
-
-
-$(document).ready(function(){
-$('.radio-inline label').removeClass('active');
-$('.radio-inline').on('click','label',function(){
-if($(this).attr('id')=="type_0"){
-  $(this).css({"background-color":"#398439","color":"white"});
-  $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
-}
-else{
-$(this).css({"background-color":"#3C8DBC","color":"white"});
-  $('#type_0').css({"background-color":"#E7E7E7","color":"black"});
-}
-});
-});
 
     </script>
 @endsection

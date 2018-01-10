@@ -332,6 +332,7 @@ color:white;
 
 
 
+
 </style>
 
 @endsection
@@ -403,7 +404,11 @@ color:white;
 
             })
             .on('select2:open', () => {
+<<<<<<< HEAD
                     $(".select2-results:not(:has(a))").append('<a href="#" style="padding: 1%;display:inline;">Add New</a>');
+=======
+                    $(".select2-results:not(:has(a))").append('<a href="" data-toggle="modal" data-target="#myModal" style="padding: 6px;height: 20px;display: inline-table;width:100%">Add New</a>');
+>>>>>>> 9dfc35a31f70108c6b0e096742e52b9cb3ecffa1
             });
 
 
@@ -705,6 +710,10 @@ $(document).on('mouseover','.add-new-item',function(){
     //console.log("lol");
 $('.select2-results__option').removeClass('select2-results__option--highlighted');
 });
+
+
+
+
 $(document).ready(function(){
 $('.items-dropdown').on('select2:open',function(){
 ogRow=$(this).parent().parent().attr("id");

@@ -19,7 +19,7 @@
       <div class="modal-body">
          
         <!-- {!! Form::open(array('url' => '/vendor','action' => 'Vendors@store')) !!} -->
-         {!! Form::open(array('action' => 'Vendors\Vendors@store1')) !!}
+         {!! Form::open(array('url' => '/vendorajax','action' => 'Vendors\Vendors@store1')) !!}
 
             {{ Form::textGroup('name', 'Name', 'id-card-o') }}
             
@@ -46,20 +46,22 @@
             {{ Form::textGroup('website', 'Website', 'globe',[]) }}
 
             {{ Form::selectGroup('business_type','Business Type','briefcase', $business_type) }}
+   
 
-
-      </div>
-
-      
       <div class="modal-footer">
        <!--  {{ Form::submit('Submit')}} -->
 
        <button type="submit" class="btn btn-success">Save</button>
 
+
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="return false;">Close</button>
+      </div>
+      
         {!! Form::close() !!}
 
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+
+
     </div>
 
   </div>

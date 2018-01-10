@@ -25,7 +25,7 @@ Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');
 Route::post('/vendorInfo','Sales\Sales@vendorInfo');
-Route::post('sales','Vendors\Vendors@store1');
+Route::post('vendorajax','Vendors\Vendors@store1');
 
 
 Route::get('test', function () {

@@ -58,7 +58,8 @@ class GenerateMenus
                 ->append('<span class="pull-right-container">')
                 ->append('<i class="fa fa-angle-left pull-right"></i>')
                 ->append('</span>');
-
+             $menu->get('vendor')->add('Vendors' , ['action'  => 'Vendors\Vendors@index'])
+                ->prepend('<i class="fa fa-users"></i>');
 
 
 

@@ -146,7 +146,8 @@ class Items extends Controller
         if ($input_items) {
             foreach ($input_items as $key => $item) {
                 $item_sub_total = ($item['price'] * $item['quantity']);
-
+               $itemTotal=0;
+               $itemTotalTax=0;
                 //Get GST ID and Data from Database
                 $GstID = $item['gst_id'];
                 $CessId = $item['cess_id'];
@@ -167,9 +168,16 @@ class Items extends Controller
                 $taxData = array();
                 if($rateType==1){  //for amount with inclusive gst
                 $taxData = $gstCalculator->getReverseTax($supply_state_id , 27 , $GstID , $CessId , $itemTaxableValue);
+               $itemTotalTax = $taxData['Total Tax'];
+               $totalTaxableValue += $taxData['Tax Exclusive'];
+               $itemTaxableValue=$taxData['Tax Exclusive'];  
                 }
                 else{
                 $taxData = $gstCalculator->getTax($supply_state_id , 27 , $GstID , $CessId , $itemTaxableValue);
+              $itemTotalTax = $taxData['Total Tax'];
+                 $itemTaxableValue = $item_sub_total - $itemDiscount;
+                $totalTaxableValue += $itemTaxableValue ;
+                
                   }
                 //$itemTotalTax = ($itemTaxableValue / 100) * 500 ;
                 //$itemTotalTax = ($itemTaxableValue / 100) * $GstRates['rate'];
@@ -182,9 +190,9 @@ class Items extends Controller
                  $itemIgst = $taxData['IGST'] ;
                  $itemUgst = $taxData['UGST'] ;
                  $itemCess = $taxData['Cess'] ;
-                 $itemTotalTax = $taxData['Total Tax'] ;
-
-                $itemTotal = $itemTaxableValue + $itemTotalTax ;
+                $itemTotal = $itemTaxableValue + $itemTotalTax;
+                  
+                
 
                 //Total Calculations
                  $totalCgst += $itemCgst ;
@@ -193,7 +201,7 @@ class Items extends Controller
                  $totalUgst += $itemUgst ;
                  $totalCess += $itemCess ;
                 $totalDiscount += $itemDiscount ;
-                $totalTaxableValue += $itemTaxableValue ;
+                
                 $tax_total += $itemTotalTax ;
 
                 //Set ItemData Attributes
@@ -202,7 +210,7 @@ class Items extends Controller
                 $itemData['sgst'] = $itemSgst ;
                 $itemData['igst'] = $itemIgst ;
                 $itemData['ugst'] = $itemUgst ;
-                $itemData['cess'] = $itemCess ;
+                $itemData['cess'] = round($itemCess , 2) ; ;
                 $itemData['subTotal'] = round($item_sub_total , 2) ;
                 $itemData['taxableValue'] = round($itemTaxableValue , 2) ;
                 $itemData['totalTax'] = round($itemTotalTax , 2) ;

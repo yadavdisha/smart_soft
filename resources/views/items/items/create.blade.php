@@ -71,7 +71,7 @@ if($(this).attr('id')=="type_0"){
   $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
 }
 else{
-$(this).css({"background-color":"#AC2925","color":"white"});
+$(this).css({"background-color":"#3C8DBC","color":"white"});
   $('#type_0').css({"background-color":"#E7E7E7","color":"black"});
 }
 });

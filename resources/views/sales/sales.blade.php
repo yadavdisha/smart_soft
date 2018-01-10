@@ -53,7 +53,7 @@
       <div class="modal-footer">
        <!--  {{ Form::submit('Submit')}} -->
 
-       <button type="submit" class="btn btn-primary">Submit</button>
+       <button type="submit" class="btn btn-success">Save</button>
 
         {!! Form::close() !!}
 
@@ -89,7 +89,7 @@
                         <tr style="background-color: #f9f9f9;">
                         
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Actions' }}</th>
-                            <th  colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
+                            <th   colspan="1" rowspan="2" class="text-center">{{ 'Name' }}</th>
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Extra Info' }}</th>
                                    
                             <th  colspan="1" rowspan="2" class="text-center">{{ 'Quantity' }}</th>
@@ -103,26 +103,25 @@
                         </tr>
                         <tr style="background-color: #f9f9f9;">
                            <th colspan="1"  class="text-center">
-                                {{ Form::radio('rateType', '0' , true) }} <span> Exc. GST</span><br>
-                                {{ Form::radio('rateType', '1') }} <span> Inc. GST</span>
+                                <span style="float:left"> {{ Form::radio('rateType', '0' , true) }} Exc. GST</span>
+                                <span style="float:right"> {{ Form::radio('rateType', '1') }} Inc. GST</span>
                             </th>
 
 
 
                             <th colspan="1" >
-                                {{ Form::radio('discountType', '0' , true) }} <span> "Rs" </span><br>
-                                {{ Form::radio('discountType', '1') }} <span> "%" </span>
+                               <span style="float:left"> {{ Form::radio('discountType', '0' , true) }}  "Rs" </span>
+                                <span style="float:right">{{ Form::radio('discountType', '1') }} "%" </span>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $item_row = 0; ?>
-                        <tr id="item-row-{{ $item_row }}">
+                        <tr id="item-row-{{ $item_row }}" class="item-row">
 
                             <!-- Delete Button -->
                             <td class="text-center" style="vertical-align: middle;">
-                                <button type="button" onclick="$(this).tooltip('destroy'); $('#item-row-{{ $item_row }}').remove(); 
-                                itemCalculate();" data-toggle="tooltip" title="{{ trans('general.delete') }}" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                <button type="button" onclick="$(this).tooltip('destroy'); $('#item-row-{{ $item_row }}').remove();rowsDetails[0]=null;itemCalculate();" data-toggle="tooltip" title="{{ trans('general.delete') }}" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                             </td>
 
                             <!-- Item Name -->
@@ -356,10 +355,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style type="text/css">
-.input-group .select2-container,#item-details-Modal .select2-container {
+.input-group .select2-container,#item-details-Modal .select2-container,td .select2-container  {
   width:100% !important;  
 }
-
+.item-row td:nth-child(2){
+  width:30%;
+}
    #item-details-Modal input.form-control,td input.form-control{
         border-radius: 4%;
         height:4.2vh;
@@ -385,9 +386,7 @@ color:white;
     cursor:pointer;
 }
 
-.add-new-item{
-  padding:0;
-}
+
 
 
 
@@ -404,22 +403,24 @@ color:white;
 @section('scripts')
     <script type="text/javascript">
         var item_row = '{{ $item_row }}';
+        var itemsArray=new Array();
 
         var ogRow;
+        var visible=-1;
         var rowsDetails={};
-
+//console.log(rowsDetails);
 
         function addItem() {
-            html  = '<tr id="item-row-' + item_row + '">';
-
-            //Delete Button
-            html  += '  <td class="text-center" style="vertical-align: middle;">';
-            html  += '    <button type="button" onclick="$(this).tooltip(\'destroy\'); $(\'#item-row-' + item_row + '\').remove(); itemCalculate();" data-toggle="tooltip" title="{{ trans('general.delete') }}" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>';
-            html  += '  </td>';
-
-
-            html  += '</tr>'
+            html  = '<tr id="item-row-'+item_row+'" class="item-row"><td class="text-center" style="vertical-align: middle;"><button type="button" onclick="$(this).tooltip(\'destroy\'); $(\'#item-row-'+item_row+'\').remove();rowsDetails['+item_row+']=null;itemCalculate();" data-toggle="tooltip" title=\'{{ trans("general.delete") }}\' class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button></td><td><select id="item-name-'+item_row+'"  name="item['+item_row+'][name]"  id="item-name-'+item_row+'" class="select2 items-dropdown"><option disabled selected>Select Item</option></select></td><td class="text-center"><span id="item-extra-info-'+item_row+'" class="extra-info-popup" data-toggle="popover" data-trigger="click" tabindex="0" data-placement="bottom" data-content=\'<button type="button" class="btn extra-info-modal" style="width:100%;background-color:#3C8DBC;color:white"  data-row="'+item_row+'">Edit</button><br><br>\' data-html="true"><i style="font-size:1.5vw;color:blue" class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i></span></td><td><input class="form-control text-center" required="required" name="item['+item_row+'][quantity]" type="text" id="item-quantity-'+item_row+'"></td><td><input class="form-control text-right" required="required" name="item['+item_row+'][price]" type="text" id="item-price-'+item_row+'"></td><td><input class="form-control typeahead" required="required" placeholder=\'{{ "Discount" }}\' name="item['+item_row+'][discount]" type="text" id="item-discount-'+item_row+'"><input name="item['+item_row+'][item_id]" type="hidden" id="item-id-'+item_row+'"></td><td class="text-right" style="vertical-align: middle;"><span id="item-tax-info-'+item_row+'" class="item_tax-info" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Please Select All Options First" data-html="true" style="float:left"><i style="font-size:1.5vw;color:blue" class="fa">&#xf129;</i></span><span id="item-total-tax-'+item_row+'">0</span></td><td class="text-right" style="vertical-align: middle;"><span id="item-total-'+item_row+'">0</span><input type="hidden" name="item['+item_row+'][gst_id]" class="hidden-gst-id"/><input type="hidden" name="item['+item_row+'][cess_id]" class="hidden-cess-id"/></td></tr>';
             $('#items tbody #addItem').before(html);
+
+                       $(document).ready(function() {
+    console.log("bind");
+    $('td .select2').select2();
+     $("#item-tax-info-"+item_row).popover();
+     $('#item-extra-info-'+item_row).popover();
+
+});
             item_row++;
         }
 
@@ -427,6 +428,16 @@ color:white;
 
        $(document).ready(function(){
             //Date picker
+
+     var initialLength=$('#item-name-0')[0].options.length;
+    for(var i=0;i<initialLength;i++){
+      itemsArray.push($('#item-name-0')[0].options[i].value);
+    }
+
+    console.log(itemsArray);
+
+
+
             $('.datepicker').datepicker({
                 dateFormat: 'yy-mm-dd',
                 autoclose: true
@@ -580,8 +591,10 @@ color:white;
                        rowsDetails[key].sgst= data.items[key].sgst;
                        rowsDetails[key].ugst=data.items[key].ugst; 
                        rowsDetails[key].igst=data.items[key].igst;
-                       rowsDetails[key].cess_amount=data.items[key].cess;  
-                      $("#item-tax-info-"+key).attr("data-content","CGST:"+data.items[key].cgst+"<br>SGST:"+data.items[key].sgst+"<br>IGST:"+data.items[key].igst+"<br>UGST:"+data.items[key].ugst+"<br>Cess:"+data.items[key].cess).data('bs.popover').setContent();      
+                       rowsDetails[key].cess_amount=data.items[key].cess;
+                       rowsDetails[key].unit_price=(parseInt(data.items[key].taxableValue)+parseInt(data.items[key].discount));
+                       rowsDetails[key].discount=parseInt(data.items[key].discount);  
+                      $("#item-tax-info-"+key).attr("data-content","Taxable<br>Value:"+data.items[key].taxableValue+"<br>CGST:"+data.items[key].cgst+"<br>SGST:"+data.items[key].sgst+"<br>IGST:"+data.items[key].igst+"<br>UGST:"+data.items[key].ugst+"<br>Cess:"+data.items[key].cess).data('bs.popover').setContent();      
                             
                         });
                         
@@ -652,7 +665,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    $('.items-dropdown').on('select2:select',function(){
+    $('#items').on('select2:select','.items-dropdown',function(){
   
    var row = $(this).parent().parent().attr('id');
    row=row[row.length-1];
@@ -701,7 +714,7 @@ $.ajax({
 
                     rowsDetails[ogRow]=data;
                
-                   
+          itemsArray.push(data.name);         
         // document.getElementById('item-type-'+globalRow).value=data['type'];
         // document.getElementById('item-tax-'+globalRow).value=data['unit_id'];
         //  document.getElementById('item-gst-'+globalRow).value=data['gst'];
@@ -717,9 +730,9 @@ $.ajax({
 });
 
 $(document).ready(function(){ //function for adding a "Add new Button in options of select2"
-$('.items-dropdown').on('select2:open', () => {
-  console.log("first");
-        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='btn btn-sm btn-default add-new-item' style='width:100%;margin:1%;border-radius:0px;border:none;background:none'>Add new item</a>");
+$('#items').on('select2:open','.items-dropdown', () => {
+  //console.log("first");
+        $(".select2-results:not(:has(a))").append("<a href='#' data-row="+ogRow+" class='add-new-item' style='padding: 2px;height: 20px;display: inline-table;width:100%'>Add new item</a>");
 });
 
 });
@@ -758,7 +771,7 @@ if($(this).attr('id')=="type_0"){
   $('#type_1').css({"background-color":"#E7E7E7","color":"black"});
 }
 else{
-$(this).css({"background-color":"#AC2925","color":"white"});
+$(this).css({"background-color":"#3C8DBC","color":"white"});
   $('#type_0').css({"background-color":"#E7E7E7","color":"black"});
 }
 });
@@ -772,14 +785,6 @@ $('.select2-results__option').removeClass('select2-results__option--highlighted'
 
 
 
-$(document).ready(function(){
-$('.items-dropdown').on('select2:open',function(){
-ogRow=$(this).parent().parent().attr("id");
-ogRow=ogRow[ogRow.length-1];
-//console.log(ogRow);
-});
-
-});
 
 
 
@@ -794,7 +799,7 @@ $(document).on('click','.extra-info-modal',function(){
       return;
         }
         $('#item-details-Modal').modal();
-        $('.extra-info-popup').trigger('click');
+        //$('#item-extra-info-'+globalRow).trigger('click');
        
         if(rowsDetails[globalRow]){
             //console.log("if")
@@ -813,11 +818,14 @@ $(document).on('click','.extra-info-modal',function(){
 
 });
 $(document).ready(function(){
-$('.extra-info-popup').on('shown.bs.popover', function () {
+$('#items').on('shown.bs.popover','.extra-info-popup', function () {
   // do something…
+  console.log("popup");
+  
    var row=$(this).parent().parent().attr("id");
    row=row[row.length-1];
-    //console.log(row);
+   visible=row;
+    //console.log(rowsDetails[row]);
         if(rowsDetails[row]){
           var unit=$('select[name="unit_modal"]')[0].options[parseInt(rowsDetails[row].unit_id)+1].innerHTML;
           var gst=$('select[name="gst"]')[0].options[parseInt(rowsDetails[row].gst)+1].innerHTML;
@@ -844,21 +852,43 @@ itemCalculate();
 
 
 $(document).ready(function(){
-$('.items-dropdown').on('select2:opening',function(){
+$('#items').on('select2:opening','.items-dropdown',function(){
     var row = $(this).parent().parent().attr('id');
    row=row[row.length-1];
    ogRow=row;
+   var selected=$(this).val();
    //console.log(row);
+   $(this).html("");
+   var len=itemsArray.length;
+   for(var i=0;i<len;i++){
+    $(this).append('<option value="'+itemsArray[i]+'" >'+itemsArray[i]+'</option>');
+   }
+
+   $(this).val(selected);
+   $(this).trigger('change.select2');
+
 });
 
 
 $('.box-success>form').on('click','button[type="submit"]',function(event){
+//event.preventDefault();
+
 commonDetails={total_discount:0,cgst:0,ugst:0,sgst:0,igst:0,cess:0};
-var nrows=$('#items tbody>tr').length-4;
+var nrows=Object.keys(rowsDetails).length;
 for(var i=0;i<(nrows);i++){
-  rowsDetails[i+""].quantity=$('tbody tr')[i].cells[3].children[0].value;
-  rowsDetails[i+""].unit_price=$('tbody tr')[i].cells[4].children[0].value;
-  rowsDetails[i+""].discount=$('tbody tr')[i].cells[5].children[0].value;
+  if(rowsDetails[i+""]==null){
+    continue;
+  }
+  rowsDetails[i+""].quantity=$('#item-row-'+i)[0].cells[3].children[0].value;
+  rowsDetails[i+""].unit_price=(rowsDetails[i+""].unit_price*1.0)/rowsDetails[i+""].quantity;
+//   if($('input[name="discountType"]:checked')[0].value==0){
+//   rowsDetails[i+""].discount=$('#item-row-'+i)[0].cells[5].children[0].value;
+// }
+// else{
+
+//  rowsDetails[i+""].discount=(parseInt($('#item-row-'+i)[0].cells[5].children[0].value)/100.0)*rowsDetails[i+""].unit_price*rowsDetails[i+""].quantity; 
+
+// }
   rowsDetails[i+""].tax_amount=$('#item-total-tax-'+i).text();
   rowsDetails[i+""].total_amount=$('#item-total-'+i).text();
   rowsDetails[i+""].taxable_value=parseInt(rowsDetails[i+""].quantity)*parseInt(rowsDetails[i+""].unit_price)-rowsDetails[i+""].discount;
@@ -868,6 +898,7 @@ for(var i=0;i<(nrows);i++){
   commonDetails['sgst']+=parseInt(rowsDetails[i+""].sgst);
   commonDetails['igst']+=parseInt(rowsDetails[i+""].igst);
   commonDetails['cess']+=parseInt(rowsDetails[i+""].cess_amount);
+  commonDetails['ecommerce_vendor_id']=0;
 }
 
 //console.log(rowsDetails);
@@ -887,6 +918,7 @@ commonDetails['round_off']=Math.round(parseFloat($('#grand-total').text()));
 commonDetails['shipping_cost']=0;
 commonDetails['order_date']=$('#order_date').val();
 //console.log(commonDetails);
+//console.log(rowsDetails);
 $('#common-object').val(JSON.stringify(commonDetails));
 $('#table-object').val(JSON.stringify(rowsDetails));
 //console.log($('#common-object').val());
@@ -894,8 +926,31 @@ $('#table-object').val(JSON.stringify(rowsDetails));
 });
 
 
+//below function for managing the hiding of popup on clicking anywhere
+$(document).click(function(){
+  if(visible>-1){
+    var tvisible=visible;
+    visible=-1;
+    $('#item-extra-info-'+tvisible).trigger('click');
+     
+  }
+});
+
+$('tbody').on('click','.extra-info-popup',function(event){
+  console.log("called");
+  if(visible>-1){
+    var tvisible=visible;
+    visible=-1;
+   $('#item-extra-info-'+tvisible).trigger('click');
+      
+  }
+ event.stopPropagation();
+});
+
+
 
   });
+
 
 
     </script>

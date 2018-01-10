@@ -9,7 +9,7 @@
 @endsection
 
     <div class="box-body">
-        <div class="table table-responsive">
+       
             <table class="table table-striped table-hover" id="tbl-items">
                 <thead>
                     <tr>
@@ -45,7 +45,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+       
     </div>
 
 @endsection

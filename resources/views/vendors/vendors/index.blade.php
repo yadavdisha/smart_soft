@@ -9,7 +9,7 @@
 @endsection
 
     <div class="box-body">
-        <div class="table table-responsive">
+        
             <table class="table table-striped table-hover" id="tbl-vendors">
                 <thead>
                     <tr>
@@ -37,16 +37,17 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                        <li><a href="{{ url('vendors/' . $vendor->id . '/edit') }}">{{ 'Edit' }}</a></li>
-                                        <li class="divider"></li>
+                                        
                                         <li>{!! Form::deleteLink($vendor, '/vendors') !!}</li>
                                     </ul>
                                 </div>
                             </td>
                         </tr>
                     @endforeach
+                    
                 </tbody>
             </table>
-        </div>
+        
     </div>
 
 @endsection
@@ -67,6 +68,10 @@
 
     .dropdown-menu >li >a{
         text-align: center;
+    }
+
+    .dropdown-menu li{
+        z-index: 50;
     }
 
     

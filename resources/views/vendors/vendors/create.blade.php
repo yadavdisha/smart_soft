@@ -39,7 +39,7 @@
         <!-- /.box-body -->
 
         <div class="box-footer">
-            {{ Form::saveButtons('vendors/vendors') }}
+            {{ Form::saveButtons('vendors') }}
         </div>
         <!-- /.box-footer -->
 

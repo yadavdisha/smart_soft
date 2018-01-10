@@ -17,6 +17,14 @@ return [
     'sales'                 => 'Sales Invoice',
     'notes'                 => 'Note|Notes',
     'attachment'            => 'Attachment',
+     'vendors'               => 'Vendor|Vendors',
+    'name'                  => 'Name',
+    'email'                 => 'Email',
+    'phone'                 => 'Phone',
+    'vendor_type'           => 'Vendor Type',
+    'business_type'         => 'Business Type',
+    'actions'               => 'Actions',
+
 
 
     'title' => [

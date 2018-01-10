@@ -18,7 +18,8 @@
 
       <div class="modal-body">
          
-        {!! Form::open(array('url' => '/sales','action' => 'Sales@store')) !!}
+        <!-- {!! Form::open(array('url' => '/vendor','action' => 'Vendors@store')) !!} -->
+         {!! Form::open(array('action' => 'Vendors\Vendors@store1')) !!}
 
             {{ Form::textGroup('name', 'Name', 'id-card-o') }}
             

@@ -62,7 +62,6 @@ class Sales extends Controller
      */
     public function store(Request $request)
     {
-
         $sale_table=Sale::create(json_decode($request->input('common-object'),true));
         $sale_id=$sale_table->id;
         $items_table=json_decode($request->input('table-object'),true);

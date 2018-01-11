@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Vendor\Vendor;
-use App\Models\Setting\State;
 
 class Vendors extends Controller
 {
@@ -31,10 +30,10 @@ class Vendors extends Controller
     {
         //
 
-        $states = State::all()->pluck ('name' , 'id');
+        $flag=1;
         $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
         $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.create',compact('vendor_type','business_type','states'));
+        return view('vendors.vendors.create',compact('vendor_type','business_type'));
     }
 
     /**
@@ -47,6 +46,15 @@ class Vendors extends Controller
     {
         //
           Vendor::create($request->all());
+          // $url = request()->url();
+          // echo $url;
+           // if($url=='*/sales'){
+           //      return redirect("sales");
+           //  }
+          // if(request()->is('*/sales')){
+          //   return redirect("sales");
+          // }
+          // else
           return redirect("vendors");       
     }
 
@@ -78,10 +86,9 @@ class Vendors extends Controller
     public function edit(Vendor $vendor)
     {
         //
-        $states = State::all()->pluck ('name' , 'id');
         $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
         $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.edit',compact('vendor','vendor_type','business_type','states'));
+        return view('vendors.vendors.edit',compact('vendor','vendor_type','business_type'));
     }
 
     /**
@@ -94,7 +101,7 @@ class Vendors extends Controller
     public function update(Vendor $vendor,Request $request)
     {
         //
-        $vendor->update($request->input());
+         $vendor->update($request->input());
         $message = trans('messages.success.updated', ['type' => trans_choice('general.vendors', 1)]);
         flash($message)->success();
         return redirect('vendors');

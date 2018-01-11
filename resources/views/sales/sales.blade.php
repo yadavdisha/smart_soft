@@ -37,7 +37,7 @@
 
             {{ Form::textGroup('city', 'City', 'home') }}
 
-            {{ Form::selectGroup('state','State','home', $states) }}
+            {{ Form::textGroup('state_id', 'State-id', 'home') }}
 
             {{ Form::textGroup('country', 'Country', 'plane') }}
 

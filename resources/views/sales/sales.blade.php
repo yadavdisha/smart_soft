@@ -893,6 +893,7 @@ for(var i=0;i<(nrows);i++){
 
 // }
   rowsDetails[i+""].tax_amount=$('#item-total-tax-'+i).text();
+  rowsDetails[i+""].name=$('#item-name-'+i).val();
   rowsDetails[i+""].total_amount=$('#item-total-'+i).text();
   rowsDetails[i+""].taxable_value=parseInt(rowsDetails[i+""].quantity)*parseInt(rowsDetails[i+""].unit_price)-rowsDetails[i+""].discount;
   commonDetails['total_discount']+=parseInt(rowsDetails[i+""].discount);

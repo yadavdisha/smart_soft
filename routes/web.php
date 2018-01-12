@@ -13,6 +13,7 @@
 
 //use App\Tax\Gst;
 
+
 Route::get('/', function () {
     return view('dashboard.dashboard.index');
 });
@@ -26,6 +27,7 @@ Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');
 Route::post('/vendorInfo','Sales\Sales@vendorInfo');
 Route::post('vendorajax','Vendors\Vendors@store1');
+Route::post('invoice_order_check','Sales\Sales@checkExist');
 
 
 Route::get('test', function () {

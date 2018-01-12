@@ -198,6 +198,8 @@ return [
         App\Providers\GoogleDriveServiceProvider::class,
         //DomPDF
         Barryvdh\DomPDF\ServiceProvider::class,
+        //Inventory Management
+        //'Stevebauman\Inventory\InventoryServiceProvider'
     ],
 
     /*

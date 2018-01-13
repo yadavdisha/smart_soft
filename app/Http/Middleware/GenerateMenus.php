@@ -95,6 +95,21 @@ class GenerateMenus
                 ->append('</span>');
 
 
+            $menu->add('Payments', ['class' => 'treeview', 'id' => 'payments'])
+                ->prepend('<span>')
+                ->prepend('<i class="fa fa-money"></i>')
+                ->append('</span>')
+                ->append('<span class="pull-right-container">')
+                ->append('<i class="fa fa-angle-left pull-right"></i>')
+                ->append('</span>');
+
+            //$menu->get('payments')->add('Payments' , ['action'  => 'Payments\Payments@index'])
+            //    ->prepend('<i class="fa fa-circle-o"></i>');
+
+            //$menu->get('payments')->add('Add Payments' , ['action'  => 'Payments\Payments@create'])
+            //    ->prepend('<i class="fa fa-circle-o"></i>');
+
+
             $menu->add('Reports', ['class' => 'treeview', 'id' => 'reports'])
                 ->prepend('<span>')
                 ->prepend('<i class="fa fa-file"></i>')

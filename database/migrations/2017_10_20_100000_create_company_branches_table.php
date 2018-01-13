@@ -19,6 +19,7 @@ class CreateCompanyBranchesTable extends Migration
             $table->integer('id',true);
             $table->integer('company_id');
             $table->integer('gstin_id');
+            $table->string('branch_name', 50);
             $table->string('phone', 20);
             $table->string('email_id', 50);
             $table->string('address', 300);

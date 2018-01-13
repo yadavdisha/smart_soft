@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property PurchasePayment[] $purchasePayments
  * @property SalesPayment[] $salesPayments
  */
-class BankAccount extends Model
+class CompanyBankAccount extends Model
 {
 
     /**
@@ -27,7 +27,7 @@ class BankAccount extends Model
      * 
      * @var string
      */
-    protected $table = 'BankAccount';
+    protected $table = 'company_bank_accounts';
 
     /**
      * The primary key for the model.
@@ -39,7 +39,15 @@ class BankAccount extends Model
     /**
      * @var array
      */
-    protected $fillable = ['account_identifier', 'entity_name', 'holder_name', 'bank_name', 'account_number', 'ifsc_code', 'notes', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['company_id', 'account_identifier', 'entity_name', 'holder_name', 'bank_name', 'account_number', 'ifsc_code', 'notes', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company\Company');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

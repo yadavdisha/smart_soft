@@ -16,7 +16,7 @@ class AddForeignKeysToPurchasePaymentsTable extends Migration
         //
         Schema::table('purchase_payments', function(Blueprint $table)
         {
-            $table->foreign('company_account_id', 'fk_purchase_payments_company_account_id')->references('id')->on('bank_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('company_account_id', 'fk_purchase_payments_company_account_id')->references('id')->on('company_bank_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->foreign('vendor_account_id', 'fk_purchase_payments_vendor_account_id')->references('id')->on('vendor_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }

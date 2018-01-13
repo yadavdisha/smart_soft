@@ -73,7 +73,10 @@
 
 <div class="box-body">
         {{ Form::selectGroup('vendor_id', 'Party Name', 'user', $vendors) }}
-
+         
+         {{ Form::selectGroup('bank_branch', 'Bank Branch', 'university', $vendors) }} 
+         <!--  params(id,label,favicon-name,array for foreach)  -->
+        {{ Form::selectGroup('company_name', 'Company', 'industry', $vendors) }}
         {{ Form::textGroup('invoice_date', 'Invoice Date', 'calendar',['id' => 'invoice_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
 
         {{ Form::textGroup('order_date', 'Order Date', 'calendar',['id' => 'order_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
@@ -83,6 +86,7 @@
         {{ Form::textGroup('order_id', 'Order ID', 'shopping-cart',[]) }}
 
         {{ Form::selectGroup('supply_state_id', 'Place of Supply', 'user', $states) }}
+       
 
         <div class="form-group col-md-12">
             {!! Form::label('items', 'Items', ['class' => 'control-label']) !!}
@@ -235,10 +239,13 @@
         {{ Form::fileGroup('attachment', trans('general.attachment')) }}
         <input type="hidden" name="table-object" id="table-object">
         <input type="hidden" name="common-object" id="common-object">
+
     </div>
     <!-- /.box-body -->
-
+     
     <div class="box-footer">
+        &nbsp; &nbsp; &nbsp;<input type="checkbox" name="payment_status" value="1" />
+      <label>Payment Complete</label><br><br>
         {{ Form::saveButtons('sales/sales') }}
     </div>
     <!-- /.box-footer -->
@@ -387,6 +394,11 @@ color:white;
 .fa-cog:hover{
     font-size: 2vw !important;
     cursor:pointer;
+}
+
+.invoice_number,.order_id{
+  display:none;
+ 
 }
 
 
@@ -663,6 +675,7 @@ $.ajax({
 $(document).ready(function() {
     $('#item-details-Modal .select2').select2();
     $('td .select2').select2();
+    $('#bank_branch,#company_name').select2();
 });
 
 
@@ -670,7 +683,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#items').on('select2:select','.items-dropdown',function(){
   
-   var row = $(this).parent().parent().attr('id');
+   var row = $(this).parent().parent().attr('id').split("-");
    row=row[row.length-1];
     
     var itemName=$("#item-name-"+row).val();
@@ -825,7 +838,7 @@ $('#items').on('shown.bs.popover','.extra-info-popup', function () {
   // do something…
   console.log("popup");
   
-   var row=$(this).parent().parent().attr("id");
+   var row=$(this).parent().parent().attr("id").split("-");
    row=row[row.length-1];
    visible=row;
     //console.log(rowsDetails[row]);
@@ -856,7 +869,7 @@ itemCalculate();
 
 $(document).ready(function(){
 $('#items').on('select2:opening','.items-dropdown',function(){
-    var row = $(this).parent().parent().attr('id');
+    var row = $(this).parent().parent().attr('id').split('-');
    row=row[row.length-1];
    ogRow=row;
    var selected=$(this).val();
@@ -949,6 +962,28 @@ $('tbody').on('click','.extra-info-popup',function(event){
       
   }
  event.stopPropagation();
+});
+
+
+$('input[name="invoice_number"],input[name="order_id"]').blur(function(){
+  var id=$(this).attr('id');
+  var val=$(this).val();
+$.ajax({
+  url:'{{ url("/invoice_order_check")  }}',
+  type:"POST",
+  data:{'id':id,'val':val},
+  dataType:"text",
+  headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+  success:function(data){
+  //console.log(data);
+  if(data==1){
+   $('.'+id).css({display:'inline',color:'red'});
+  }
+  else{
+    $('.'+id).css({display:'none'});
+  }
+  }
+});
 });
 
 

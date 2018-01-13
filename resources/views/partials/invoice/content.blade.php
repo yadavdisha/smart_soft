@@ -35,7 +35,7 @@ $tquantity+=$item['quantity'];
 	</tbody>
 </table>
 <div class="row tax-info">
-	<div class="col-xs-7">
+	<div class="col-xs-6">
 		<p><strong>Bank Details:</strong></p>
         <p>Building 6A, Shop No.5,Ashok Nagar,Bhiwandi,Mumbai, India</p>
 	</div>

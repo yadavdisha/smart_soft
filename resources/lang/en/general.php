@@ -31,6 +31,8 @@ return [
     'company'               => 'Company',
     'payment_types'         => 'Payment Type|Payment Types',
     'payment_notes'         => 'Payment Notes',
+    'payment_mode'          => 'Payment Mode',
+    'reference'             => 'Reference',
 
 
 

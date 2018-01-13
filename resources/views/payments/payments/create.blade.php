@@ -8,17 +8,23 @@
         {!! Form::open(['url' => '/payments','role' => 'form']) !!}
 
         <div class="box-body">
-            {{ Form::textGroup('payment_date', trans('general.date'), 'calendar', ['id' => 'payment_date', 'class' => 'form-control', 'required' => 'required', 'data-inputmask' => '\'alias\': \'dd-mm-yyyy\'', 'data-mask' => ''], Date::parse($payment->payment_date)->toDateString()) }}
+            <!-- {{ Form::selectGroup('sales_id', trans_choice('general.sales', 1), 'credit-card', $sales) }} -->
+
+            {{ Form::textGroup('sales_id', 'Sales Invoice ID', 'credit-card', ['required' => 'required', 'autofocus' => 'autofocus']) }}
+
+             {{ Form::textGroup('payment_date', 'Payment Date','calendar', array('id' => 'payment_date', 'class' => ' form-control datepicker', 'required' => 'required' , 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => '')) }}
+
+            {{ Form::selectGroup('payment_mode', trans('general.payment_mode'), 'credit-card', $payment_mode) }}
 
             {{ Form::textGroup('paid_amount', trans('general.amount'), 'money', ['required' => 'required', 'autofocus' => 'autofocus']) }}
 
             {{ Form::textareaGroup('payment_terms', trans('general.payment_terms')) }}
 
-            {{ Form::selectGroup('company_account_id', trans_choice('general.company', 1), 'folder-open-o', $categories) }}
+            {{ Form::selectGroup('vendor_account_id', trans_choice('general.vendors', 1), 'credit-card', $vendors) }}
 
-            {{ Form::selectGroup('vendor_account_id', trans_choice('general.vendors', 1), 'user', $vendors, null, []) }}
+            {{ Form::selectGroup('company_account_id', trans_choice('general.company', 1), 'folder-open-o', $companies) }}
 
-            {{ Form::selectGroup('payment_type', trans_choice('general.payment_types', 1), 'credit-card', $payment_methods, null) }}
+            {{ Form::selectGroup('payment_type', trans_choice('general.payment_types', 1), 'credit-card', $payment_type) }}
 
             {{ Form::textGroup('payment_reference', trans('general.reference'), 'file-text-o',[]) }}
 
@@ -35,12 +41,51 @@
     </div>
 @endsection
 
-@push('js')
-<script src="{{ asset('vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('public/js/bootstrap-fancyfile.js') }}"></script>
-@endpush
+@section('js')
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('dist/js/select2.full.min.js') }}"></script>
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="{{ asset('js/bootstrap-datepicker.min.js') }}">
+    <script src="{{ asset('js/bootstrap-fancyfile.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-@push('css')
-<link rel="stylesheet" href="{{ asset('vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css') }}">
-<link rel="stylesheet" href="{{ asset('public/css/bootstrap-fancyfile.css') }}">
-@endpush
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+        changeMonth: true,
+      changeYear: true,
+      dateFormat: 'dd-mm-yy',
+      autoclose: true
+    });
+  });
+  </script>
+
+@endsection
+
+
+@section('css')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+@endsection
+
+@section('scripts')
+<<!-- script type="text/javascript">
+
+$('datepicker').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true
+            });
+</script> -->
+
+@endsection

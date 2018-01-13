@@ -16,6 +16,7 @@ class Companies extends Controller
     public function index()
     {
     $company=Company::all();
+    
         return view('company.company.index',['companies'=>$company]);
     }
 
@@ -27,6 +28,7 @@ class Companies extends Controller
     public function create()
     {
         //
+        return view('company.company.create');
     }
 
     /**
@@ -38,6 +40,7 @@ class Companies extends Controller
     public function store(Request $request)
     {
         //
+        
     }
 
     /**
@@ -83,10 +86,10 @@ class Companies extends Controller
     public function destroy(Company $company)
     {
         //
-         $item->delete();
-        $message = trans('messages.success.deleted', ['type' => trans_choice('general.items', 1)]);
+         $company->delete();
+        $message = trans('messages.success.deleted', ['type' => trans_choice('general.company', 1)]);
 
             flash($message)->success();
-        return redirect('comapny');
+        return redirect('company');
     }
 }

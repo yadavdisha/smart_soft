@@ -16,7 +16,7 @@ class Companies extends Controller
     public function index()
     {
     $company=Company::all();
-        return view('company.company.index',['companies'=>$companies]);
+        return view('company.company.index',['companies'=>$company]);
     }
 
     /**

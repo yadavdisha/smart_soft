@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <th class="col-md-1">@sortablelink('id', 'ID')</th>
-                        <th class="col-md-1">@sortablelink('name', 'Company Name')</th>
+                        <th class="col-md-1">@sortablelink('name', 'Name')</th>
                         <th class="col-md-1">@sortablelink('pan', 'PAN')</th>
                         <th class="col-md-1 text-center">actions</th>
                     </tr>
@@ -26,8 +26,7 @@
                             <td class="col-md-1"></td>
                             <td class="col-md-1"></td>
                             <td class="col-md-1"></td>
-                            <td class="col-md-1"></td>
-                            <td class="col-md-1"></td>
+                            
                             <td class="text-center">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle-position="left" aria-expanded="false">
@@ -40,7 +39,7 @@
                                 </div>
                             </td>
                         </tr>
-                    <!-- @endforeach -->
+                    @endforeach
                 </tbody>
             </table>
        

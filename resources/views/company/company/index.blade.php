@@ -21,7 +21,7 @@
                 </thead>
 
                 <tbody>
-                   <!-- @foreach($items as $item) -->
+                   @foreach($companies as $company)
                         <tr>
                             <td class="col-md-1"></td>
                             <td class="col-md-1"></td>
@@ -34,8 +34,8 @@
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="{{ url('items/' . $item->id . '/edit') }}">{{ 'Edit' }}</a></li>
-                                        <li>{!! Form::deleteLink($item, '/company') !!}</li>
+                                        <li><a href="{{ url('$company/' . $company->id . '/edit') }}">{{ 'Edit' }}</a></li>
+                                        <li>{!! Form::deleteLink($company, '/company') !!}</li>
                                     </ul>
                                 </div>
                             </td>

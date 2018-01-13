@@ -22,6 +22,7 @@ Route::post('items/ajaxStore','Items\Items@ajaxStore');
 Route::resource('sales', 'Sales\Sales');
 Route::resource('items', 'Items\Items');
 Route::resource('vendors','Vendors\Vendors');
+Route::resource('company','Company\Company');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');

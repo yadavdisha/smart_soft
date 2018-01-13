@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Company;
+namespace App\Http\Controllers\Companies;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Company\Company;
 
-class Company extends Controller
+class Companies extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class Company extends Controller
      */
     public function index()
     {
-        //
+    $company=Company::all();
+        return view('company.company.index',['company'=>$companies]);
     }
 
     /**

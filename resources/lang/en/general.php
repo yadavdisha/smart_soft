@@ -24,6 +24,13 @@ return [
     'vendor_type'           => 'Vendor Type',
     'business_type'         => 'Business Type',
     'actions'               => 'Actions',
+    'payments'              => 'Payment|Payments',
+    'date'                  => 'Date',
+    'amount'                => 'Amount',
+    'payment_terms'         => 'Payment Terms',
+    'company'               => 'Company',
+    'payment_types'         => 'Payment Type|Payment Types',
+    'payment_notes'         => 'Payment Notes',
 
 
 

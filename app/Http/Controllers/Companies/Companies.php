@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Companies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company;
+use App\Models\Setting\State;
 
 class Companies extends Controller
 {
@@ -28,7 +29,10 @@ class Companies extends Controller
     public function create()
     {
         //
-        return view('company.company.create');
+        $states = State::all()->pluck('name' ,'id');
+        $city=["0"=>"Mumbai"];
+        $country=["0"=>"India"];
+        return view('company.company.create',compact('states','city','country'));
     }
 
     /**
@@ -40,6 +44,12 @@ class Companies extends Controller
     public function store(Request $request)
     {
         //
+        $accounts=$request->input('accounts');
+        $branch=$request->input('branch');
+        $status= $request->input('type');
+        $cname=$request->input('name');
+        $pan=$request->input('pan');
+        //dd($pan);
         
     }
 

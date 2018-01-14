@@ -35,11 +35,11 @@ class Payments extends Controller
     public function create()
     {
         $sales = Sale::all()->pluck('id');
-        $vendors = VendorAccount::all()->pluck('account_number','id');
-        $companies=CompanyBankAccount::all()->pluck('account_number','id');
+        $vendor_accounts = VendorAccount::all()->pluck('account_number','id');
+        $company_accounts=CompanyBankAccount::all()->pluck('account_number','id');
         $payment_mode=Payments::getEnumValues('sales_payments','payment_mode');
         $payment_type=Payments::getEnumValues('sales_payments','payment_type');
-        return view('payments.payments.create',compact('sales','vendors','companies','payment_mode','payment_type'));
+        return view('payments.payments.create',compact('sales','vendor_accounts','company_accounts','payment_mode','payment_type'));
 
     }
 

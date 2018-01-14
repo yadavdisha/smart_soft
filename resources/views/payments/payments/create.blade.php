@@ -20,9 +20,9 @@
 
             {{ Form::textareaGroup('payment_terms', trans('general.payment_terms')) }}
 
-            {{ Form::selectGroup('vendor_account_id', trans_choice('general.vendors', 1), 'credit-card', $vendors) }}
+            {{ Form::selectGroup('vendor_account_id', trans_choice('general.vendors', 1), 'credit-card', $vendor_accounts) }}
 
-            {{ Form::selectGroup('company_account_id', trans_choice('general.company', 1), 'folder-open-o', $companies) }}
+            {{ Form::selectGroup('company_account_id', trans_choice('general.company', 1), 'folder-open-o', $company_accounts) }}
 
             {{ Form::selectGroup('payment_type', trans_choice('general.payment_types', 1), 'credit-card', $payment_type) }}
 

@@ -12,6 +12,7 @@ use App\Models\Tax\Cess;
 use App\Models\Item\Item;
 use App\Models\Sale\Sale;
 use App\Models\Sale\SalesItem;
+use App\Models\Company\CompanyBranch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use PDF;
@@ -35,12 +36,12 @@ class Sales extends Controller
         $states = State::all()->pluck ('name' , 'id');
         $items=Item::pluck('name');
         $items=$items->toArray();
-
-         $vendor_type= Sales::getEnumValues('vendors','vendor_type');
+        $bank_branch=CompanyBranch::all()->pluck('branch_name','id');
+        $vendor_type= Sales::getEnumValues('vendors','vendor_type');
         $business_type= Sales::getEnumValues('vendors','business_type');
         $cess=Cess::all()->pluck ('description' , 'id');
         //dd($items);
-        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','vendor_type','business_type','cess'));
+        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
 
     }
 

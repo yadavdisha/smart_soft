@@ -50,6 +50,7 @@ class Companies extends Controller
         $cname=$request->input('name');
         $pan=$request->input('pan');
         //dd($pan);
+        return redirect("/company");    
         
     }
 

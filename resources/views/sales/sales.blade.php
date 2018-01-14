@@ -76,7 +76,7 @@
          
          {{ Form::selectGroup('bank_branch', 'Bank Branch', 'university', $vendors) }} 
          <!--  params(id,label,favicon-name,array for foreach)  -->
-        {{ Form::selectGroup('company_name', 'Company', 'industry', $vendors) }}
+        
         {{ Form::textGroup('invoice_date', 'Invoice Date', 'calendar',['id' => 'invoice_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}
 
         {{ Form::textGroup('order_date', 'Order Date', 'calendar',['id' => 'order_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}

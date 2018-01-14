@@ -18,6 +18,9 @@ class CreateSalesTable extends Migration
         {
             $table->integer('id', true);
             $table->string('order_id', 25)->nullable();
+            $table->integer('company_id');
+            $table->integer('company_branch_id');
+            $table->integer('company_account_id');
             $table->string('invoice_number', 20)->unique('uk_sales_invoice_number');
             $table->date('invoice_date');
             $table->enum('invoice_type', array('B2B','B2C'))->default('B2C');

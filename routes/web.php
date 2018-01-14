@@ -23,6 +23,7 @@ Route::resource('sales', 'Sales\Sales');
 Route::resource('items', 'Items\Items');
 Route::resource('vendors','Vendors\Vendors');
 Route::resource('payments','Payments\Payments');
+Route::resource('company','Companies\Companies');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('/hsn','Items\Items@hsn');
 Route::get('/autofill','Sales\Sales@autoFill');

@@ -32,4 +32,22 @@ class CompanyBranch extends Model
     {
         return $this->belongsTo('App\Models\Company\Company');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sale()
+    {
+        return $this->hasMany('App\Models\Sale\Sale');
+    }
+
+    public function purchase()
+    {
+        return $this->hasMany('App\Models\Purchase\Purchase');
+    }
+
+    public function creditDebitNote()
+    {
+        return $this->hasMany('App\Models\CreditDebitNote\CreditDebitNote');
+    }
 }

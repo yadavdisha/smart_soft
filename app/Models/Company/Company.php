@@ -37,4 +37,19 @@ class Company extends Model
     {
         return $this->hasMany('App\Models\Company\companyGstin');
     }
+
+    public function sale()
+    {
+        return $this->hasMany('App\Models\Sale\Sale');
+    }
+
+    public function purchase()
+    {
+        return $this->hasMany('App\Models\Purchase\Purchase');
+    }
+
+    public function creditDebitNote()
+    {
+        return $this->hasMany('App\Models\CreditDebitNote\CreditDebitNote');
+    }
 }

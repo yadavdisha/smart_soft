@@ -34,8 +34,6 @@ return [
     'payment_mode'          => 'Payment Mode',
     'reference'             => 'Reference',
 
-
-
     'title' => [
         'new'               => 'New :type',
         'edit'              => 'Edit :type',

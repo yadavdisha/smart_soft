@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Create Items')
+@section('title', 'Create Vendor')
 
 @section('content')
     <!-- Default box -->

@@ -2965,6 +2965,8 @@ class ComposerStaticInit7195d8e53875225c12168c8341cb170a
         'Google_Service_CloudTasks_Policy' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/Policy.php',
         'Google_Service_CloudTasks_PullMessage' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/PullMessage.php',
         'Google_Service_CloudTasks_PullTarget' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTarget.php',
+        'Google_Service_CloudTasks_PullTasksRequest' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTasksRequest.php',
+        'Google_Service_CloudTasks_PullTasksResponse' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTasksResponse.php',
         'Google_Service_CloudTasks_PurgeQueueRequest' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/PurgeQueueRequest.php',
         'Google_Service_CloudTasks_Queue' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/Queue.php',
         'Google_Service_CloudTasks_RateLimits' => __DIR__ . '/..' . '/google/apiclient-services/src/Google/Service/CloudTasks/RateLimits.php',

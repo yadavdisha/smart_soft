@@ -101,7 +101,7 @@ class Sale extends Model
 
     public function companyBranch()
     {
-        return $this->belongsTo('App\Models\Cendor\CompanyBranch');
+        return $this->belongsTo('App\Models\Company\CompanyBranch');
     }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

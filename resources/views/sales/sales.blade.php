@@ -37,7 +37,7 @@
 
             {{ Form::textGroup('city', 'City', 'home') }}
 
-            {{ Form::textGroup('state_id', 'State-id', 'home') }}
+            {{ Form::selectGroup('state','State','home', $states) }}
 
             {{ Form::textGroup('country', 'Country', 'plane') }}
 
@@ -74,7 +74,7 @@
 <div class="box-body">
         {{ Form::selectGroup('vendor_id', 'Party Name', 'user', $vendors) }}
          
-         {{ Form::selectGroup('bank_branch', 'Bank Branch', 'university', $vendors) }} 
+         {{ Form::selectGroup('bank_branch', 'Bank Branch', 'university', $bank_branch) }} 
          <!--  params(id,label,favicon-name,array for foreach)  -->
         
         {{ Form::textGroup('invoice_date', 'Invoice Date', 'calendar',['id' => 'invoice_date', 'class' => 'form-control datepicker', 'required' => 'required', 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => ''], null) }}

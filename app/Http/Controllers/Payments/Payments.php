@@ -5,6 +5,13 @@ namespace App\Http\Controllers\Payments;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Sale\SalesPayment;
+use DB;
+use App\Models\Vendor\Vendor;
+use App\Models\Vendor\VendorAccount;
+use App\Models\Company\Company;
+use App\Models\Company\CompanyBankAccount;
+use App\Models\Sale\Sale;
+
 
 class Payments extends Controller
 {
@@ -16,6 +23,8 @@ class Payments extends Controller
     public function index()
     {
         //
+        $vendors=DB::table('vendors')->get();
+        return view('payments.payments.index',compact('vendors'));
     }
 
     /**
@@ -25,7 +34,13 @@ class Payments extends Controller
      */
     public function create()
     {
-        //
+        $sales = Sale::all()->pluck('id');
+        $vendor_accounts = VendorAccount::all()->pluck('account_number','id');
+        $company_accounts=CompanyBankAccount::all()->pluck('account_number','id');
+        $payment_mode=Payments::getEnumValues('sales_payments','payment_mode');
+        $payment_type=Payments::getEnumValues('sales_payments','payment_type');
+        return view('payments.payments.create',compact('sales','vendor_accounts','company_accounts','payment_mode','payment_type'));
+
     }
 
     /**
@@ -37,6 +52,7 @@ class Payments extends Controller
     public function store(Request $request)
     {
         //
+        SalesPayment::create($request->all());
         $payment=SalesPayment::updateOrCreate($request->all());
         $payment->paid_amount=$payment->paid_amount+$request->input('paid_amount');
     }
@@ -84,5 +100,18 @@ class Payments extends Controller
     public function destroy($id)
     {
         //
+    }
+
+     //to retrieve enum values from  database as an array
+    public static function getEnumValues($table, $column) {
+      $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
+      preg_match('/^enum\((.*)\)$/', $type, $matches);
+      $enum = array();
+      foreach( explode(',', $matches[1]) as $value )
+      {
+        $v = trim( $value, "'" );
+        $enum = array_add($enum, $v, $v);
+      }
+      return $enum;
     }
 }

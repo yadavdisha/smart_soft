@@ -2521,6 +2521,8 @@ return array(
     'Google_Service_CloudTasks_Policy' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/Policy.php',
     'Google_Service_CloudTasks_PullMessage' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/PullMessage.php',
     'Google_Service_CloudTasks_PullTarget' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTarget.php',
+    'Google_Service_CloudTasks_PullTasksRequest' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTasksRequest.php',
+    'Google_Service_CloudTasks_PullTasksResponse' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/PullTasksResponse.php',
     'Google_Service_CloudTasks_PurgeQueueRequest' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/PurgeQueueRequest.php',
     'Google_Service_CloudTasks_Queue' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/Queue.php',
     'Google_Service_CloudTasks_RateLimits' => $vendorDir . '/google/apiclient-services/src/Google/Service/CloudTasks/RateLimits.php',

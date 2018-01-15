@@ -13,7 +13,7 @@
   <br>
   {!! Form::open(array('url' => '/company')) !!}  
 <button type="submit" name="submit" class="btn btn-success"><i class="fa fa-save"></i>Save</button>&nbsp;
-<a href="{{ url('/create') }}" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</a>
+<a href="{{ url('/company') }}" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</a>
   <div id="company"  class="parts">
      <br>
   <br>
@@ -337,11 +337,12 @@ var email=$('#email').val();
 var address=$('#address').val();
 var city_id=$('#city').val();
 var city=$('#city')[0].options[$('#city')[0].selectedIndex].innerHTML;
-var state_id=$('#city').val();
+var state_id=$('#state').val();
 var state=$('#state')[0].options[$('#state')[0].selectedIndex].innerHTML;
-var country=$('#country').val();
+var country_id=$('#country').val();
+var country=$('#country')[0].options[$('#country')[0].selectedIndex].innerHTML;
 var pincode=$('#pincode').val();
-var html=$('#company-branches tbody').append(' <tr id="branch-row-'+branch_row+'"><td class="col-md-1 hidden"><span>'+gstin+'<input type="hidden" name="branch['+branch_row+'][gstin]" value='+gstin+'></span></td><td class="col-md-1"><span>'+b_name+'<input type="hidden" name="branch['+branch_row+'][branch_name]" value='+b_name+'></span></td><td class="col-md-1"><span>'+phone+'<input type="hidden" name="branch['+branch_row+'][phone]" value='+phone+'></span></td><td class="col-md-1"><span>'+email+'<input type="hidden" name="branch['+branch_row+'][email_id]" value='+email+'></span></td><td class="col-md-1"><span>'+address+'<input type="hidden" name="branch['+branch_row+'][address]" value='+address+'></span></td><td class="col-md-1"><span>'+city+'<input type="hidden" name="branch['+branch_row+'][city]" value='+city_id+'></span></td><td class="col-md-1"><span>'+state+'<input type="hidden" name="branch['+branch_row+'][state_id]" value='+state_id+'></span></td><td class="col-md-1 hidden"><span>'+country+'<input type="hidden" name="branch['+branch_row+'][country]" value='+country+'></span></td><td class="col-md-1 hidden"><span>'+pincode+'<input type="hidden" name="branch['+branch_row+'][pin_code]" value='+pincode+'></span></td><td class="text-center"><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle-position="left" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></button><ul class="dropdown-menu dropdown-menu-right"><li><a href="#" class="branch-edit">{{ "Edit" }}</a></li><li><button class="delete-link" title="Delete" onclick="$(this).parent().parent().parent().parent().parent().remove();">Delete</button></li></ul></div></td></tr>');
+var html=$('#company-branches tbody').append(' <tr id="branch-row-'+branch_row+'"><td class="col-md-1 hidden"><span>'+gstin+'<input type="hidden" name="branch['+branch_row+'][gstin]" value='+gstin+'></span></td><td class="col-md-1"><span>'+b_name+'<input type="hidden" name="branch['+branch_row+'][branch_name]" value='+b_name+'></span></td><td class="col-md-1"><span>'+phone+'<input type="hidden" name="branch['+branch_row+'][phone]" value='+phone+'></span></td><td class="col-md-1"><span>'+email+'<input type="hidden" name="branch['+branch_row+'][email_id]" value='+email+'></span></td><td class="col-md-1"><span>'+address+'<input type="hidden" name="branch['+branch_row+'][address]" value='+address+'></span></td><td class="col-md-1"><span>'+city+'<input type="hidden" name="branch['+branch_row+'][city]" value='+city_id+'></span></td><td class="col-md-1"><span>'+state+'<input type="hidden" name="branch['+branch_row+'][state_id]" value='+state_id+'></span></td><td class="col-md-1 hidden"><span>'+country+'<input type="hidden" name="branch['+branch_row+'][country]" value='+country_id+'></span></td><td class="col-md-1 hidden"><span>'+pincode+'<input type="hidden" name="branch['+branch_row+'][pin_code]" value='+pincode+'></span></td><td class="text-center"><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle-position="left" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></button><ul class="dropdown-menu dropdown-menu-right"><li><a href="#" class="branch-edit">{{ "Edit" }}</a></li><li><button class="delete-link" title="Delete" onclick="$(this).parent().parent().parent().parent().parent().remove();">Delete</button></li></ul></div></td></tr>');
 branch_row++;
 $('#branchesModal').modal('hide');
 $('#branchesModal input').val("");
@@ -371,7 +372,7 @@ var len=$('#company-branches table tbody')[0].rows[row].cells.length-1;
 console.log(len);
 for(var i=0;i<len;i++){
   var value=$('#company-branches tbody tr').eq(row).children().eq(i).children().children().val();
-  $('#branchesModal input').eq(i).val(value);
+  $('#branchesModal .form-control').eq(i).val(value);
 }  
 $('#branchesModal').modal('show');
 });

@@ -30,12 +30,16 @@ class Company extends Model
      */
     public function companyBankAccount()
     {
-        return $this->hasMany('App\Models\Company\companyBankAccount');
+        return $this->hasMany('App\Models\Company\CompanyBankAccount');
     }
 
     public function companyGstin()
     {
-        return $this->hasMany('App\Models\Company\companyGstin');
+        return $this->hasMany('App\Models\Company\CompanyGstin','company_id');
+    }
+
+    public function companyBranch(){
+        return $this->hasMany('App\Models\Company\CompanyBranch','company_id');
     }
 
     public function sale()

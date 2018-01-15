@@ -16,6 +16,7 @@
                         <th class="col-md-1">@sortablelink('id', 'ID')</th>
                         <th class="col-md-1">@sortablelink('name', 'Name')</th>
                         <th class="col-md-1">@sortablelink('pan', 'PAN')</th>
+                        <th class="col-md-1">Status</th>
                         <th class="col-md-1 text-center">actions</th>
                     </tr>
                 </thead>
@@ -23,9 +24,10 @@
                 <tbody>
                    @foreach($companies as $company)
                         <tr>
-                            <td class="col-md-1"></td>
-                            <td class="col-md-1"></td>
-                            <td class="col-md-1"></td>
+                            <td class="col-md-1">{{ $company->id }}</td>
+                            <td class="col-md-1">{{ $company->name }}</td>
+                            <td class="col-md-1">{{ $company->pan }}</td>
+                            <td class="col-md-1">Disabled</td>
                             
                             <td class="text-center">
                                 <div class="btn-group">
@@ -33,7 +35,7 @@
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="{{ url('$company/' . $company->id . '/edit') }}">{{ 'Edit' }}</a></li>
+                                        <li><a href="{{ url('company/' . $company->id . '/edit') }}">{{ 'Edit' }}</a></li>
                                         <li>{!! Form::deleteLink($company, '/company') !!}</li>
                                     </ul>
                                 </div>
@@ -46,3 +48,25 @@
     </div>
 
 @endsection
+
+@section('css')
+<style type="text/css">
+/* below css for correcting delete button in actions list */
+    button[title="Delete"]{
+        border:none;
+        background:none;
+        width:100%;
+        color:grey;
+    }
+
+    button[title="Delete"]:hover{
+        background-color:#E1E3E9;
+        color:black;
+    }
+
+    .dropdown-menu >li >a{
+        text-align: center;
+    }
+
+
+</style>

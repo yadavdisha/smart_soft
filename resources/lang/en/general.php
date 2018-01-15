@@ -24,8 +24,7 @@ return [
     'vendor_type'           => 'Vendor Type',
     'business_type'         => 'Business Type',
     'actions'               => 'Actions',
-
-
+    'company'               =>'company',
 
     'title' => [
         'new'               => 'New :type',

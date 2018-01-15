@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Companies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company;
+use App\Models\Setting\State;
 
 class Companies extends Controller
 {
@@ -16,6 +17,7 @@ class Companies extends Controller
     public function index()
     {
     $company=Company::all();
+    
         return view('company.company.index',['companies'=>$company]);
     }
 
@@ -27,6 +29,10 @@ class Companies extends Controller
     public function create()
     {
         //
+        $states = State::all()->pluck('name' ,'id');
+        $city=["0"=>"Mumbai"];
+        $country=["0"=>"India"];
+        return view('company.company.create',compact('states','city','country'));
     }
 
     /**
@@ -38,6 +44,14 @@ class Companies extends Controller
     public function store(Request $request)
     {
         //
+        $accounts=$request->input('accounts');
+        $branch=$request->input('branch');
+        $status= $request->input('type');
+        $cname=$request->input('name');
+        $pan=$request->input('pan');
+        //dd($pan);
+        return redirect("/company");    
+        
     }
 
     /**
@@ -83,10 +97,10 @@ class Companies extends Controller
     public function destroy(Company $company)
     {
         //
-         $item->delete();
-        $message = trans('messages.success.deleted', ['type' => trans_choice('general.items', 1)]);
+         $company->delete();
+        $message = trans('messages.success.deleted', ['type' => trans_choice('general.company', 1)]);
 
             flash($message)->success();
-        return redirect('comapny');
+        return redirect('company');
     }
 }

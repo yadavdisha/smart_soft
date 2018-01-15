@@ -13,8 +13,6 @@
     ]) !!}
 
     <div class="box-body">
-            <!-- {{ Form::selectGroup('sales_id', trans_choice('general.sales', 1), 'credit-card', $sales) }} -->
-
             {{ Form::textGroup('sales_id', 'Sales Invoice ID', 'credit-card', ['required' => 'required', 'autofocus' => 'autofocus']) }}
 
              {{ Form::textGroup('payment_date', 'Payment Date','calendar', array('id' => 'payment_date', 'class' => ' form-control datepicker', 'required' => 'required' , 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => '')) }}
@@ -38,7 +36,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-        {{ Form::saveButtons('payments/payments') }}
+        {{ Form::saveButtons('/payments') }}
     </div>
     <!-- /.box-footer -->
     {!! Form::close() !!}
@@ -52,10 +50,27 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('dist/css/select2.min.css') }}">
     <script src="{{ asset('dist/js/select2.full.min.js') }}"></script>
+
+    <!-- datepicker -->
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+        changeMonth: true,
+      changeYear: true,
+      dateFormat: 'dd-mm-yy',
+      autoclose: true
+    });
+  });
+  </script>
+
 @endsection
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
+    <!-- datepicker -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 @endsection
 
 

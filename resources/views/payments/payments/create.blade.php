@@ -8,8 +8,6 @@
         {!! Form::open(['url' => '/payments','role' => 'form']) !!}
 
         <div class="box-body">
-            <!-- {{ Form::selectGroup('sales_id', trans_choice('general.sales', 1), 'credit-card', $sales) }} -->
-
             {{ Form::textGroup('sales_id', 'Sales Invoice ID', 'credit-card', ['required' => 'required', 'autofocus' => 'autofocus']) }}
 
              {{ Form::textGroup('payment_date', 'Payment Date','calendar', array('id' => 'payment_date', 'class' => ' form-control datepicker', 'required' => 'required' , 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => '')) }}
@@ -76,16 +74,5 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-
-@endsection
-
-@section('scripts')
-<<!-- script type="text/javascript">
-
-$('datepicker').datepicker({
-                dateFormat: 'dd-mm-yy',
-                autoclose: true
-            });
-</script> -->
 
 @endsection

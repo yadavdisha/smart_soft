@@ -15,7 +15,7 @@
                     <tr>
                         <th class="col-md-1">@sortablelink('id', 'ID')</th>
                         <th class="col-md-1">@sortablelink('name', 'Name')</th>
-                        <th class="col-md-1">@sortablelink('pan', 'PAN')</th>
+                        <th class="col-md-1">PAN</th>
                         <th class="col-md-1">Status</th>
                         <th class="col-md-1 text-center">actions</th>
                     </tr>

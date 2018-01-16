@@ -30,7 +30,7 @@ class CompanyBranch extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Models\Company\Company');
+        return $this->belongsTo('App\Models\Company\Company','company_id');
     }
 
     /**
@@ -50,4 +50,6 @@ class CompanyBranch extends Model
     {
         return $this->hasMany('App\Models\CreditDebitNote\CreditDebitNote');
     }
+
+
 }

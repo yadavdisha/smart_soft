@@ -76,7 +76,12 @@ class Payments extends Controller
      */
     public function edit($id)
     {
-        //
+        $sales = Sale::all()->pluck('id');
+        $vendor_accounts = VendorAccount::all()->pluck('account_number','id');
+        $company_accounts=CompanyBankAccount::all()->pluck('account_number','id');
+        $payment_mode=Payments::getEnumValues('sales_payments','payment_mode');
+        $payment_type=Payments::getEnumValues('sales_payments','payment_type');
+        return view('payments.payments.create',compact('sales','vendor_accounts','company_accounts','payment_mode','payment_type'));
     }
 
     /**
@@ -86,9 +91,12 @@ class Payments extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SalesPaymet $payment,Request $request)
     {
-        //
+        $payment->update($request->input());
+        $message = trans('messages.success.updated', ['type' => trans_choice('general.payment', 1)]);
+        flash($message)->success();
+        return redirect('payments');
     }
 
     /**

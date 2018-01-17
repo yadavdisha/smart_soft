@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vendors;
+namespace App\Http\Controllers\Purchases;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class Vendors extends Controller
     {
         //
         $vendors=DB::table('vendors')->get();
-        return view('vendors.vendors.index',compact('vendors'));
+        return view('purchase.vendors.index',compact('vendors'));
     }
 
     /**
@@ -34,7 +34,7 @@ class Vendors extends Controller
         $states = State::all()->pluck ('name' , 'id');
         $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
         $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.create',compact('vendor_type','business_type','states'));
+        return view('purchase.vendors.create',compact('vendor_type','business_type','states'));
     }
 
     /**
@@ -81,7 +81,7 @@ class Vendors extends Controller
         $states = State::all()->pluck ('name' , 'id');
         $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
         $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.edit',compact('vendor','vendor_type','business_type','states'));
+        return view('purchase.vendors.edit',compact('vendor','vendor_type','business_type','states'));
     }
 
     /**

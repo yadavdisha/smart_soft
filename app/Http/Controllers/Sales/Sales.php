@@ -53,7 +53,7 @@ class Sales extends Controller
         $business_type= Sales::getEnumValues('vendors','business_type');
         $cess=Cess::all()->pluck ('description' , 'id');
         //dd($items);
-        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
+        return view('sales.sales.create' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
     }
 
     /**

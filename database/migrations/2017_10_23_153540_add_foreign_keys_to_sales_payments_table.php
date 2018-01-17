@@ -18,7 +18,7 @@ class AddForeignKeysToSalesPaymentsTable extends Migration
         {
             $table->foreign('sales_id', 'fk_sales_payments_sales_id')->references('id')->on('sales')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->foreign('company_account_id', 'fk_sales_payments_company_account')->references('id')->on('company_bank_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreign('vendor_account_id', 'fk_sales_payments_vendor_account')->references('id')->on('vendor_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('customer_account_id', 'fk_sales_payments_customer_account')->references('id')->on('vendor_accounts')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -34,7 +34,7 @@ class AddForeignKeysToSalesPaymentsTable extends Migration
         {
             $table->dropForeign('fk_sales_payments_sales_id');
             $table->dropForeign('fk_sales_payments_company_account');
-            $table->dropForeign('fk_sales_payments_vendor_account');
+            $table->dropForeign('fk_sales_payments_customer_account');
         });
     }
 }

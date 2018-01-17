@@ -54,7 +54,6 @@ class Sales extends Controller
         $cess=Cess::all()->pluck ('description' , 'id');
         //dd($items);
         return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
-
     }
 
     /**
@@ -63,44 +62,35 @@ class Sales extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {  try{
-          $sale_table=Sale::create(json_decode($request->input('common-object'),true));
-         
-    
-        $sale_id=$sale_table->id;
-     $items_table=json_decode($request->input('table-object'),true);
-        foreach($items_table as $item_row){
-             //dd($item_row);
-             if(!empty($item_row)){
-             SalesItem::insert(['sales_id'=>$sale_id,'item_id'=>$item_row['id'],'hsn'=>$item_row['hsn'],'item_type'=>$item_row['type'],'unit_price'=>$item_row['unit_price'],'quantity'=>$item_row['quantity'],'unit_id'=>$item_row['unit_id'],'discount'=>$item_row['discount'],'taxable_value'=>$item_row['taxable_value'],'gst_id'=>$item_row['gst'],'cgst'=>$item_row['cgst'],'sgst'=>$item_row['sgst'],'igst'=>$item_row['igst'],'ugst'=>$item_row['ugst'],'cess_id'=>$item_row['cess'],'tax_amount'=>$item_row['tax_amount'],'total_product_amount'=>$item_row['total_amount'],'cess_amount'=>$item_row['cess_amount']]);
-         }
-     }
-   }
-     catch (Exception $e) {
+    public function store(Request $request) {
+        try {
+            $sale_table=Sale::create(json_decode($request->input('common-object'),true));
+            $sale_id=$sale_table->id;
+            $items_table=json_decode($request->input('table-object'),true);
+            
+            foreach($items_table as $item_row){
+                 //dd($item_row);
+                if(!empty($item_row)) {
+                    SalesItem::insert(['sales_id'=>$sale_id,'item_id'=>$item_row['id'],'hsn'=>$item_row['hsn'],'item_type'=>$item_row['type'],'unit_price'=>$item_row['unit_price'],'quantity'=>$item_row['quantity'],'unit_id'=>$item_row['unit_id'],'discount'=>$item_row['discount'],'taxable_value'=>$item_row['taxable_value'],'gst_id'=>$item_row['gst'],'cgst'=>$item_row['cgst'],'sgst'=>$item_row['sgst'],'igst'=>$item_row['igst'],'ugst'=>$item_row['ugst'],'cess_id'=>$item_row['cess'],'tax_amount'=>$item_row['tax_amount'],'total_product_amount'=>$item_row['total_amount'],'cess_amount'=>$item_row['cess_amount']]);
+                }
+            }
+        }
+        catch (Exception $e) {
             $errorCode = $e->errorInfo[1];          
             if($errorCode == 1062){
-              return redirect('sales');
+                return redirect('sales');
             }
         }
 
-
-    
- //$sale_table=json_decode($request->input('common-object'),true);
-// //dd($sale_table);
-// $items_table=json_decode($request->input('table-object'),true);
-$vendor=$sale_table->vendor()->pluck('address','gstin')->toArray();
-$state=$sale_table->supplyState()->pluck('state_tax_code')->toArray()[0];
- $sale_table["gstin"]=array_keys($vendor)[0];
-$sale_table["address"]=array_values($vendor)[0];
-$sale_table["state"]=$state;
-//dd($items_table);
- $pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
-
-return $pdf->download('items.pdf');
+        $vendor=$sale_table->vendor()->pluck('address','gstin')->toArray();
+        $state=$sale_table->supplyState()->pluck('state_tax_code')->toArray()[0];
+        $sale_table["gstin"]=array_keys($vendor)[0];
+        $sale_table["address"]=array_values($vendor)[0];
+        $sale_table["state"]=$state;
+        $pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
+        return $pdf->download('items.pdf');
 
         //return view("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
-
 
     }
     
@@ -149,21 +139,21 @@ return $pdf->download('items.pdf');
         //
     }
 
-//autoFill() returns the item details using item name
-      public function autoFill(Request $req)
+    //autoFill() returns the item details using item name
+    public function autoFill(Request $req)
     {
         $data=$req->item;  //item is the get data from url
         //var_dump($data);
         $item_details=Item::where('name','=',$data)->get()->toArray();
         $hsn_row=HSN::where('hsn','=',$item_details[0]['hsn'])->pluck('gst_id','cess_id')->toArray();//returns an associative array with key as cess_id and value as gst_id of each row
-         $gst_id=array_values($hsn_row);
-         $cess_id=array_keys($hsn_row);
-         $item_details[0]['gst']=$gst_id[0];
-         $item_details[0]['cess']=$cess_id[0];
+        $gst_id=array_values($hsn_row);
+        $cess_id=array_keys($hsn_row);
+        $item_details[0]['gst']=$gst_id[0];
+        $item_details[0]['cess']=$cess_id[0];
 
-        
+
         //dd(json_encode($item_details[0]));
-       
+
         return json_encode($item_details[0]);
        
     }
@@ -176,28 +166,26 @@ return $pdf->download('items.pdf');
 
     //to retrieve enum values from  database as an array
     public static function getEnumValues($table, $column) {
-      $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
-      preg_match('/^enum\((.*)\)$/', $type, $matches);
-      $enum = array();
-      foreach( explode(',', $matches[1]) as $value )
-      {
-        $v = trim( $value, "'" );
-        $enum = array_add($enum, $v, $v);
-      }
-      return $enum;
+        $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $enum = array();
+        foreach( explode(',', $matches[1]) as $value ) {
+            $v = trim( $value, "'" );
+            $enum = array_add($enum, $v, $v);
+        }
+        return $enum;
     }
 
- public function checkExist(Request $req){
-  $id=$req->input('id');
-  $value=$req->input('val');
-  if($id=="invoice_number"){
-    $count=Sale::where("invoice_number",'=',$value)->count();
-    return $count;//return count of rows for matching invoice number
-  }
-  else{
-$count=Sale::where("order_id",'=',$value)->count();
-    return $count;
-  }
- }   
-
+    public function checkExist(Request $req) {
+        $id=$req->input('id');
+        $value=$req->input('val');
+        if($id=="invoice_number") {
+            $count=Sale::where("invoice_number",'=',$value)->count();
+            return $count;//return count of rows for matching invoice number
+        }
+        else {
+            $count=Sale::where("order_id",'=',$value)->count();
+            return $count;
+        }
+    }
 }

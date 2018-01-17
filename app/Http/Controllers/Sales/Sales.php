@@ -12,6 +12,8 @@ use App\Models\Tax\Cess;
 use App\Models\Item\Item;
 use App\Models\Sale\Sale;
 use App\Models\Sale\SalesItem;
+use App\Models\Customer\Customer;
+use App\Models\Company\Company;
 use App\Models\Company\CompanyBranch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -29,6 +31,23 @@ class Sales extends Controller
     public function index()
     {
         //
+        $sales=Sale::all(); 
+        foreach($sales as $sale){
+            $sale->customer=Customer::find($sale->customer_id)->name;
+            $sale->company=Company::find($sale->company_id)->name;
+        }
+        return view('sales.sales.index',compact('sales'));
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
         $hsn = Hsn::all()->pluck('hsn' , 'hsn');
         $units = Unit::all()->pluck ('unit' , 'id');
         $vendors = Vendor::all()->pluck ('name' , 'id');
@@ -41,19 +60,7 @@ class Sales extends Controller
         $business_type= Sales::getEnumValues('vendors','business_type');
         $cess=Cess::all()->pluck ('description' , 'id');
         //dd($items);
-        return view('sales.sales' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-
+        return view('sales.sales.create' , compact('gst' , 'vendors' , 'hsn' , 'units' , 'states','items','bank_branch','vendor_type','business_type','cess'));
     }
 
     /**
@@ -62,27 +69,32 @@ class Sales extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
-    {  try{
-          $sale_table=Sale::create(json_decode($request->input('common-object'),true));
-         
-    
+    {  
+    try{
+          
+        $sale_table=Sale::create(json_decode($request->input('common-object'),true));
+        $bank_branch_id=$request->input('bank_branch'); 
         $sale_id=$sale_table->id;
+        $company=Company::find($bank_branch_id);
+        $company_id=$company->id;
+        $account_id=$company->companyBankAccount()->first()->id;
      $items_table=json_decode($request->input('table-object'),true);
         foreach($items_table as $item_row){
              //dd($item_row);
              if(!empty($item_row)){
-             SalesItem::insert(['sales_id'=>$sale_id,'item_id'=>$item_row['id'],'hsn'=>$item_row['hsn'],'item_type'=>$item_row['type'],'unit_price'=>$item_row['unit_price'],'quantity'=>$item_row['quantity'],'unit_id'=>$item_row['unit_id'],'discount'=>$item_row['discount'],'taxable_value'=>$item_row['taxable_value'],'gst_id'=>$item_row['gst'],'cgst'=>$item_row['cgst'],'sgst'=>$item_row['sgst'],'igst'=>$item_row['igst'],'ugst'=>$item_row['ugst'],'cess_id'=>$item_row['cess'],'tax_amount'=>$item_row['tax_amount'],'total_product_amount'=>$item_row['total_amount'],'cess_amount'=>$item_row['cess_amount']]);
+             SalesItem::insert(['sales_id'=>$sale_id,'item_id'=>$item_row['id'],'hsn'=>$item_row['hsn'],'item_type'=>$item_row['type'],'unit_price'=>$item_row['unit_price'],'quantity'=>$item_row['quantity'],'unit_id'=>$item_row['unit_id'],'discount'=>$item_row['discount'],'taxable_value'=>$item_row['taxable_value'],'gst_id'=>$item_row['gst'],'cgst'=>$item_row['cgst'],'sgst'=>$item_row['sgst'],'igst'=>$item_row['igst'],'ugst'=>$item_row['ugst'],'cess_id'=>$item_row['cess'],'tax_amount'=>$item_row['tax_amount'],'total_product_amount'=>$item_row['total_amount'],'cess_amount'=>$item_row['cess_amount'],"company_branch_id"=>$bank_branch_id,"company_id"=>$company_id,"company_account_id"=>$account_id]);
          }
      }
 
-     $vendor=$sale_table->vendor()->pluck('address','gstin')->toArray();
+$vendor=$sale_table->vendor()->pluck('address','gstin')->toArray();
 $state=$sale_table->supplyState()->pluck('state_tax_code')->toArray()[0];
- $sale_table["gstin"]=array_keys($vendor)[0];
+$sale_table["gstin"]=array_keys($vendor)[0];
 $sale_table["address"]=array_values($vendor)[0];
 $sale_table["state"]=$state;
 //dd($items_table);
- $pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
+$pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
 
 return $pdf->download('items.pdf');
    }
@@ -90,24 +102,13 @@ return $pdf->download('items.pdf');
             $errorCode = $e->errorInfo[1];          
            return "Some error occured";
         }
+    }
 
 
     
 
-// $vendor=$sale_table->vendor()->pluck('address','gstin')->toArray();
-// $state=$sale_table->supplyState()->pluck('state_tax_code')->toArray()[0];
-//  $sale_table["gstin"]=array_keys($vendor)[0];
-// $sale_table["address"]=array_values($vendor)[0];
-// $sale_table["state"]=$state;
-// //dd($items_table);
-//  $pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
-
-// return $pdf->download('items.pdf');
-
-   
 
 
-    }
     
     /**
      * Display the specified resource.
@@ -154,21 +155,21 @@ return $pdf->download('items.pdf');
         //
     }
 
-//autoFill() returns the item details using item name
-      public function autoFill(Request $req)
+    //autoFill() returns the item details using item name
+    public function autoFill(Request $req)
     {
         $data=$req->item;  //item is the get data from url
         //var_dump($data);
         $item_details=Item::where('name','=',$data)->get()->toArray();
         $hsn_row=HSN::where('hsn','=',$item_details[0]['hsn'])->pluck('gst_id','cess_id')->toArray();//returns an associative array with key as cess_id and value as gst_id of each row
-         $gst_id=array_values($hsn_row);
-         $cess_id=array_keys($hsn_row);
-         $item_details[0]['gst']=$gst_id[0];
-         $item_details[0]['cess']=$cess_id[0];
+        $gst_id=array_values($hsn_row);
+        $cess_id=array_keys($hsn_row);
+        $item_details[0]['gst']=$gst_id[0];
+        $item_details[0]['cess']=$cess_id[0];
 
-        
+
         //dd(json_encode($item_details[0]));
-       
+
         return json_encode($item_details[0]);
        
     }
@@ -181,318 +182,26 @@ return $pdf->download('items.pdf');
 
     //to retrieve enum values from  database as an array
     public static function getEnumValues($table, $column) {
-      $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
-      preg_match('/^enum\((.*)\)$/', $type, $matches);
-      $enum = array();
-      foreach( explode(',', $matches[1]) as $value )
-      {
-        $v = trim( $value, "'" );
-        $enum = array_add($enum, $v, $v);
-      }
-      return $enum;
+        $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $enum = array();
+        foreach( explode(',', $matches[1]) as $value ) {
+            $v = trim( $value, "'" );
+            $enum = array_add($enum, $v, $v);
+        }
+        return $enum;
     }
 
-//     public function domPdf(){
-//         //$dompdf=new Dompdf();
-//         //$dompdf->set_option('chroot', '/path/to/document/root');
-       
-//        $sale_table=[
-//   "total_discount" => 20,
-//   "cgst" => 0,
-//   "ugst" => 0,
-//   "sgst" => 0,
-//   "igst" => 0,
-//   "cess" => 146,
-//   "ecommerce_vendor_id" => 0,
-//   "vendor_id" => "1",
-//   "invoice_date" => "2018-01-22",
-//   "invoice_number" => "11111111",
-//   "order_id" => "2222222222",
-//   "supply_state_id" => "11",
-//   "total_taxable_value" => "4873",
-//   "total_tax_amount" => "146.19",
-//   "total_amount" => "5019.19",
-//   "notes" => "dom",
-//   "round_off" => 5019,
-//   "shipping_cost" => 0,
-//   "order_date" => "2018-01-24",
-//   "updated_at" => "2018-01-12 12:08:47",
-//   "created_at" => "2018-01-12 12:08:47",
-//   "id" => 58,
-//   "gstin" => "52974ahgjaja",
-//   "address" => "Building 6A, Shop No.5,Ashok Nagar,Bhiwandi,Mumbai, India|+91 8080568008",
-//   "state" => "11-Sikkim"
-// ];
-
-// $items_table= [0 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//    1=>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   2=>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   3 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   4 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   5 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   6 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   7 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   8 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   9 =>[
-//     "id" => 1,
-//     "sku" => "kaflalglja",
-//     "name" => "jlejlsgllsjg",
-//     "type" => "Goods",
-//     "hsn" => "00000000",
-//     "unit_id" => 59,
-//     "details" => "ljsjglslgj",
-//     "created_at" => "2018-01-09 15:34:02",
-//     "updated_at" => "2018-01-09 15:34:02",
-//     "deleted_at" => null,
-//     "gst" => 1,
-//     "cess" => 2,
-//     "cgst" => 0,
-//     "sgst" => 0,
-//     "ugst" => 0,
-//     "igst" => 0,
-//     "cess_amount" => 146.19,
-//     "unit_price" => 21,
-//     "discount" => 20,
-//     "quantity" => "233",
-//     "tax_amount" => "146.19",
-//     "total_amount" => "5019.19",
-//     "taxable_value" => 4873,
-//   ],
-//   ];
-
-//   $pdf = PDF::loadView("sales_invoice",["sale"=>$sale_table,"items"=>$items_table]);
-
-// return $pdf->download('items.pdf');
-//   //return view('sales_invoice',["sale"=>$sale_table,"items"=>$items_table]);          
-//     }
-
- public function checkExist(Request $req){
-  $id=$req->input('id');
-  $value=$req->input('val');
-  if($id=="invoice_number"){
-    $count=Sale::where("invoice_number",'=',$value)->count();
-    return $count;//return count of rows for matching invoice number
-  }
-  else{
-$count=Sale::where("order_id",'=',$value)->count();
-    return $count;
-  }
- }   
-
+    public function checkExist(Request $req) {
+        $id=$req->input('id');
+        $value=$req->input('val');
+        if($id=="invoice_number") {
+            $count=Sale::where("invoice_number",'=',$value)->count();
+            return $count;//return count of rows for matching invoice number
+        }
+        else {
+            $count=Sale::where("order_id",'=',$value)->count();
+            return $count;
+        }
+    }
 }

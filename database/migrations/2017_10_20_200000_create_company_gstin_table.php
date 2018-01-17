@@ -16,7 +16,7 @@ class CreateCompanyGstinTable extends Migration
         //Create company_gstin Table
         Schema::create('company_gstin', function(Blueprint $table)
         {
-            $table->integer('id')->primary();
+            $table->integer('id', true);
             $table->string('gstin', 20);
             $table->integer('company_id');
             $table->integer('state_id');

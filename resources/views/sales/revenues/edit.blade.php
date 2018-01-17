@@ -1,15 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', trans('general.title.new', ['type' => trans_choice('general.payments', 1)]))
+@section('title', trans('general.title.edit', ['type' => trans_choice('general.payments', 1)]))
 
 @section('content')
-    <!-- Default box -->
-    <div class="box box-success">
-        {!! Form::open(['url' => '/payments','role' => 'form']) !!}
+<!-- Default box -->
+<div class="box box-success">
+    {!! Form::model($payment, [
+        'method' => 'PATCH',
+        'files' => true,
+        'url' => ['payments', $payment->id],
+        'role' => 'form'
+    ]) !!}
 
-        <div class="box-body">
-            <!-- {{ Form::selectGroup('sales_id', trans_choice('general.sales', 1), 'credit-card', $sales) }} -->
-
+    <div class="box-body">
             {{ Form::textGroup('sales_id', 'Sales Invoice ID', 'credit-card', ['required' => 'required', 'autofocus' => 'autofocus']) }}
 
              {{ Form::textGroup('payment_date', 'Payment Date','calendar', array('id' => 'payment_date', 'class' => ' form-control datepicker', 'required' => 'required' , 'data-inputmask' => '\'alias\': \'yyyy/mm/dd\'', 'data-mask' => '')) }}
@@ -30,28 +33,25 @@
 
             {{ Form::textGroup('payment_notes', trans('general.payment_notes'), 'file-text-o',[]) }}
         </div>
-        <!-- /.box-body -->
+    <!-- /.box-body -->
 
-        <div class="box-footer">
-            {{ Form::saveButtons('/payments') }}
-        </div>
-        <!-- /.box-footer -->
-
-        {!! Form::close() !!}
+    <div class="box-footer">
+        {{ Form::saveButtons('/payments') }}
     </div>
+    <!-- /.box-footer -->
+    {!! Form::close() !!}
+
+</div>
 @endsection
 
-@section('js')
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <!-- Select2 -->
-    <script src="{{ asset('dist/js/select2.full.min.js') }}"></script>
-    <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ asset('js/bootstrap-datepicker.min.js') }}">
-    <script src="{{ asset('js/bootstrap-fancyfile.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+@section('js')
+    <script src="{{ asset('js/bootstrap-fancyfile.js') }}"></script>
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('dist/css/select2.min.css') }}">
+    <script src="{{ asset('dist/js/select2.full.min.js') }}"></script>
+
+    <!-- datepicker -->
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
   <script>
@@ -67,25 +67,10 @@
 
 @endsection
 
-
 @section('css')
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-fancyfile.css') }}">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    <!-- datepicker -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-
 @endsection
 
-@section('scripts')
-<<!-- script type="text/javascript">
 
-$('datepicker').datepicker({
-                dateFormat: 'dd-mm-yy',
-                autoclose: true
-            });
-</script> -->
-
-@endsection

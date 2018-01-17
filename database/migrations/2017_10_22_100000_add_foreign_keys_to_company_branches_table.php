@@ -17,6 +17,7 @@ class AddForeignKeysToCompanyBranchesTable extends Migration
         Schema::table('company_branches', function(Blueprint $table)
         {
             $table->foreign('company_id', 'fk_branch_company_id')->references('id')->on('companies')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('state_id', 'fk_branch_state_id')->references('id')->on('states')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -31,6 +32,7 @@ class AddForeignKeysToCompanyBranchesTable extends Migration
         Schema::table('company_branches', function(Blueprint $table)
         {
             $table->dropForeign('fk_branch_company_id');
+            $table->dropForeign('fk_branch_state_id');
         });
     }
 }

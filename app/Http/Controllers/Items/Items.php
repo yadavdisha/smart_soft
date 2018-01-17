@@ -21,12 +21,7 @@ class Items extends Controller
      */
     public function index()
     {
-        //
-       // $items = Item::all()->pluck('HSN Code');
         $items = DB::table('items')->get();
-        //echo $items;
-        //foreach($items as $item)
-         //echo $items;
         return view('items.items.index' , compact('items'));
     }
 
@@ -37,10 +32,8 @@ class Items extends Controller
      */
     public function create()
     {
-        //
         $hsn = Hsn::all()->pluck('hsn' , 'hsn');
         $units = Unit::all()->pluck ('unit' , 'id');
-
         return view ('items.items.create' , compact('hsn' , 'units'));
         //return view ('Items.create');
     }

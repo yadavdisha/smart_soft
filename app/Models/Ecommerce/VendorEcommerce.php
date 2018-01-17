@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Vendor;
+namespace App\Models\Ecommerce;
 
 use Illuminate\Database\Eloquent\Model;
 

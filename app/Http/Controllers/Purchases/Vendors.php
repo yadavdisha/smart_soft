@@ -1,19 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Payments;
+namespace App\Http\Controllers\Purchases;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Sale\SalesPayment;
+use Illuminate\Http\Request;
 use DB;
 use App\Models\Vendor\Vendor;
-use App\Models\Vendor\VendorAccount;
-use App\Models\Company\Company;
-use App\Models\Company\CompanyBankAccount;
-use App\Models\Sale\Sale;
+use App\Models\Setting\State;
 
-
-class Payments extends Controller
+class Vendors extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,7 +19,7 @@ class Payments extends Controller
     {
         //
         $vendors=DB::table('vendors')->get();
-        return view('payments.payments.index',compact('vendors'));
+        return view('purchase.vendors.index',compact('vendors'));
     }
 
     /**
@@ -34,13 +29,12 @@ class Payments extends Controller
      */
     public function create()
     {
-        $sales = Sale::all()->pluck('id');
-        $vendor_accounts = VendorAccount::all()->pluck('account_number','id');
-        $company_accounts=CompanyBankAccount::all()->pluck('account_number','id');
-        $payment_mode=Payments::getEnumValues('sales_payments','payment_mode');
-        $payment_type=Payments::getEnumValues('sales_payments','payment_type');
-        return view('payments.payments.create',compact('sales','vendor_accounts','company_accounts','payment_mode','payment_type'));
+        //
 
+        $states = State::all()->pluck ('name' , 'id');
+        $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
+        $business_type= Vendors::getEnumValues('vendors','business_type');
+        return view('purchase.vendors.create',compact('vendor_type','business_type','states'));
     }
 
     /**
@@ -52,9 +46,16 @@ class Payments extends Controller
     public function store(Request $request)
     {
         //
-        SalesPayment::create($request->all());
-        $payment=SalesPayment::updateOrCreate($request->all());
-        $payment->paid_amount=$payment->paid_amount+$request->input('paid_amount');
+          Vendor::create($request->all());
+          return redirect("vendors");       
+    }
+
+    public function store1(Request $request)
+    {
+        //
+          Vendor::create($request->all());
+          return redirect("sales");
+            
     }
 
     /**
@@ -74,9 +75,13 @@ class Payments extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Vendor $vendor)
     {
         //
+        $states = State::all()->pluck ('name' , 'id');
+        $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
+        $business_type= Vendors::getEnumValues('vendors','business_type');
+        return view('purchase.vendors.edit',compact('vendor','vendor_type','business_type','states'));
     }
 
     /**
@@ -86,9 +91,13 @@ class Payments extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Vendor $vendor,Request $request)
     {
         //
+        $vendor->update($request->input());
+        $message = trans('messages.success.updated', ['type' => trans_choice('general.vendors', 1)]);
+        flash($message)->success();
+        return redirect('vendors');
     }
 
     /**
@@ -97,12 +106,17 @@ class Payments extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Vendor $vendor)
     {
         //
+         $vendor->delete();
+        $message = trans('messages.success.deleted', ['type' => trans_choice('general.vendors', 1)]);
+
+            flash($message)->success();
+        return redirect('vendors');
     }
 
-     //to retrieve enum values from  database as an array
+    //to retrieve enum values from  database as an array
     public static function getEnumValues($table, $column) {
       $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '{$column}'"))[0]->Type ;
       preg_match('/^enum\((.*)\)$/', $type, $matches);

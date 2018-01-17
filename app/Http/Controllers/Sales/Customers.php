@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Vendors;
+namespace App\Http\Controllers\Sales;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use DB;
-use App\Models\Vendor\Vendor;
+use App\Models\Customer\Customer;
 use App\Models\Setting\State;
 
-class Vendors extends Controller
+class Customers extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,8 @@ class Vendors extends Controller
     public function index()
     {
         //
-        $vendors=DB::table('vendors')->get();
-        return view('vendors.vendors.index',compact('vendors'));
+        $customers=DB::table('customers')->get();
+        return view('sales.customers.index',compact('customers'));
     }
 
     /**
@@ -30,11 +30,10 @@ class Vendors extends Controller
     public function create()
     {
         //
-
         $states = State::all()->pluck ('name' , 'id');
-        $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
-        $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.create',compact('vendor_type','business_type','states'));
+        $customer_type= Customers::getEnumValues('customers','customer_type');
+        $business_type= Customers::getEnumValues('customers','business_type');
+        return view('customers.customers.create',compact('customer_type','business_type','states'));
     }
 
     /**
@@ -46,16 +45,8 @@ class Vendors extends Controller
     public function store(Request $request)
     {
         //
-          Vendor::create($request->all());
-          return redirect("vendors");       
-    }
-
-    public function store1(Request $request)
-    {
-        //
-          Vendor::create($request->all());
-          return redirect("sales");
-            
+        Customer::create($request->all());
+          return redirect("customers"); 
     }
 
     /**
@@ -75,29 +66,29 @@ class Vendors extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vendor $vendor)
+    public function edit($id)
     {
         //
         $states = State::all()->pluck ('name' , 'id');
-        $vendor_type= Vendors::getEnumValues('vendors','vendor_type');
-        $business_type= Vendors::getEnumValues('vendors','business_type');
-        return view('vendors.vendors.edit',compact('vendor','vendor_type','business_type','states'));
+        $customer_type= Customers::getEnumValues('customers','customer_type');
+        $business_type= Customers::getEnumValues('customers','business_type');
+        return view('customers.customers.edit',compact('customer','customer_type','business_type','states'));
     }
 
-    /**
+      /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Vendor $vendor,Request $request)
+    public function update(Customer $customer, Request $request)
     {
         //
-        $vendor->update($request->input());
-        $message = trans('messages.success.updated', ['type' => trans_choice('general.vendors', 1)]);
+        $customer->update($request->input());
+        $message = trans('messages.success.updated', ['type' => trans_choice('general.customers', 1)]);
         flash($message)->success();
-        return redirect('vendors');
+        return redirect('customers');
     }
 
     /**
@@ -106,14 +97,14 @@ class Vendors extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vendor $vendor)
+    public function destroy(Customer $customer)
     {
         //
-         $vendor->delete();
-        $message = trans('messages.success.deleted', ['type' => trans_choice('general.vendors', 1)]);
+         $customer->delete();
+        $message = trans('messages.success.deleted', ['type' => trans_choice('general.customers', 1)]);
 
             flash($message)->success();
-        return redirect('vendors');
+        return redirect('customers');
     }
 
     //to retrieve enum values from  database as an array

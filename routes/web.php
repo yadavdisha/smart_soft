@@ -14,9 +14,11 @@
 //use App\Tax\Gst;
 
 
-Route::get('/', function () {
+
+/*Route::get('/', function () {
     return view('dashboard.dashboard.index');
-});
+});*/
+Route::resource('/','Totalsales');
 
 Route::resource('sales', 'Sales\Sales');
 Route::resource('vendors','Vendors\Vendors');
@@ -32,6 +34,8 @@ Route::post('invoice_order_check','Sales\Sales@checkExist');
 Route::post('items/itemCalculate', 'Items\Items@itemCalculate');
 Route::post('items/ajaxStore','Items\Items@ajaxStore');
 Route::resource('items', 'Items\Items');
+
+
 
 Route::get('test', function () {
     $GstRate = App\Models\Tax\Cess::find(0)->rate;

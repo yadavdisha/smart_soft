@@ -36,7 +36,7 @@ class Sales extends Controller
             $sale->customer=Customer::find($sale->customer_id)->name;
             $sale->company=Company::find($sale->company_id)->name;
         }
-        return view('sales.sales.index',compact('sales'));
+       return view('sales.sales.index',compact('sales'));
 
     }
 
@@ -48,7 +48,7 @@ class Sales extends Controller
     public function create()
     {
         //
-        $hsn = Hsn::all()->pluck('hsn' , 'hsn');
+       $hsn = Hsn::all()->pluck('hsn' , 'hsn');
         $units = Unit::all()->pluck ('unit' , 'id');
         $vendors = Vendor::all()->pluck ('name' , 'id');
         $gst = Gst::all()->pluck ('description' , 'id');
